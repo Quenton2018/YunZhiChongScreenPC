@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>2018云智充数据分享</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1, minimum-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <script type="text/javascript" src="js/jquery-1.8.1.min.js"></script>
+    <script type="text/javascript" src="js/echarts4.min.js"></script>
+    <script type="text/javascript">
+        ;(function(win, doc) {
+            var initFontSize=function(){
+                var n=doc.getElementsByTagName("html")[0],
+                    e=doc.documentElement.clientWidth;
+                    n.style.fontSize = e/3402*100+"px"
+            };
+            initFontSize();
+            window.onresize=function(){
+                initFontSize();
+                myChart1.resize();
+                myChart2.resize();
+                myChart3.resize();
+                myChart4.resize();
+                myChart5.resize();
+                myChart6.resize();
+            };
+        })(window, window.document);
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="wrap">
+            <div class="wrap-left">
+                <!-- 代理商地区分布 -->
+                <div class="agent-box bgsize">
+                    <!--饼状图一-->
+                    <div class="charts agent-charts" id="Echarts1">
+                        
+                    </div>
+                </div>
+                <!-- 充电桩使用排名 -->
+                <div class="cdz-box bgsize">
+                    <!--柱状图二-->
+                    <div class="charts cdz-charts" id="Echarts2">
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="wrap-right">
+                <!-- 实时进度 -->
+                <div class="realtime-progress-box bgsize">
+                    <div class="flex-table" style="height:170px; overflow:hidden">
+                        <div class="flex-header">
+                           <span>用户</span>
+                           <span>地区</span>
+                           <span>事件</span>
+                        </div>
+                        <div class="flex-tbody" id="marquee">
+                           <div class="list-item">
+                                <span>18987044636</span>
+                                <span>江西</span>
+                                <span>已开始充电</span>
+                           </div>
+                           <div class="list-item">
+                                <span> 18870996325 </span>
+                                <span>湖北</span>
+                                <span>成功充值100元</span>
+                           </div>
+                           <div class="list-item">
+                                <span>15563233695</span>
+                                <span>湖南</span>
+                                <span>趣商城兑换大米一袋</span>
+                           </div>
+                           <div class="list-item">
+                                <span>18870456321</span>
+                                <span>安徽</span>
+                                <span>趣商城兑换大米一袋</span>
+                           </div>
+                           <div class="list-item">
+                                <span>17925636958</span>
+                                <span>河南</span>
+                                <span>趣商城兑换大米一袋</span>
+                           </div>
+                           <div class="list-item">
+                                <span>17925636959</span>
+                                <span>河北</span>
+                                <span>趣商城兑换大米一袋</span>
+                           </div>
+                       </div>
+                    </div>                   
+                </div>
+                <!-- 安装点充电桩使用率 -->
+                <div class="azcdz-box bgsize">
+                    <!--柱状图三-->
+                    <div class="charts azcdz-charts" id="Echarts3">
+                        
+                    </div>
+                </div>
+                <!-- 充电方式 -->
+                <div class="cdfs-box bgsize">
+                    <div class="flex-box">
+                        <div class="flex-item">
+                            <!--饼状图四-->
+                            <div class="charts cdfs-charts" id="Echarts4">
+                                
+                            </div>
+                        </div>
+                        <div class="flex-item">
+                            <div class="charts cdfs-charts" id="Echarts5">
+                                
+                            </div>
+                        </div>
+                        <div class="flex-item">
+                            <div class="charts cdfs-charts" id="Echarts6">
+                                
+                            </div>
+                        </div>
+                    </div>             
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="js/index.js"></script>
+</body>
+</html>

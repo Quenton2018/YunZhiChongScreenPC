@@ -1,0 +1,22 @@
+html, body, header,article, nav, ul, li{margin: 0; padding: 0;}
+html, body, .container,.herder_bg {
+    height: 100%;
+}
+*{
+    box-sizing:border-box
+}
+ul, ol, dd {
+  list-style-type:none;
+  margin-left:0;
+  padding-left:0;
+ }
+a {
+ text-decoration:none;
+ color:#1580da;
+}
+
+body{
+  font-size:0.16rem;
+  color: #ffffff;
+  font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,\\5FAE\8F6F\96C5\9ED1,Arial,sans-serif;
+}
