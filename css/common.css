@@ -1,4 +1,4 @@
-html, body, header,article, nav, ul, li{margin: 0; padding: 0;}
+html, body, header,article, nav, ul, li, div, p{margin: 0; padding: 0;}
 html, body, .container,.herder_bg {
     height: 100%;
 }
@@ -6,17 +6,52 @@ html, body, .container,.herder_bg {
     box-sizing:border-box
 }
 ul, ol, dd {
-  list-style-type:none;
-  margin-left:0;
-  padding-left:0;
- }
+    list-style-type:none;
+    margin-left:0;
+    padding-left:0;
+}
 a {
- text-decoration:none;
- color:#1580da;
+    text-decoration:none;
+    color:#1580da;
 }
 
 body{
   font-size:0.16rem;
-  color: #ffffff;
-  font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,\\5FAE\8F6F\96C5\9ED1,Arial,sans-serif;
+  color: #fff;
+  font-family: Helvetica Neue,Helvetica,'PingFang SC','Hiragino Sans GB','Microsoft YaHei',Arial,sans-serif;
+}
+.container {
+    background-image: url(../images/page_bg.jpg);
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-color:#001b2d;
+    font-family: 'Microsoft YaHei',Arial,sans-serif;
+}
+.wrap {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+.charts{
+    width:100%;
+    height:100%;
+    float: left;
+}
+@font-face {
+    font-family: numbleFonts;
+    src: url('../fonts/DigifaceWide.ttf');
+}
+.iconfont{
+    font-family: numbleFonts;
+}
+.flex{
+    width: 100%;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: flex;
+    justify-content:space-around;
+    align-items: center; 
 }

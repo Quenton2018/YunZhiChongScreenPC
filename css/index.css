@@ -1,45 +1,29 @@
-.container {
-    padding:0.1rem;
-    background-image: url(../images/page_bg.jpg);
-    background-position: top center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
-    background-color:#001b2d;
-    font-family: 'microsoft yahei',Arial,sans-serif;
-
-}
-.wrap {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
+.wrap{
+   padding-top:0.5rem;
+   position: relative; 
 }
 .wrap-left {
     width: 7.02rem;
     height: 100%;
-    float: left;
-    margin-left:1%;
+}
+.warp-mid{
+    width:1600px;
+    max-width:1600px;
+    height: 100%;
+    overflow: hidden;
 }
 .wrap-right {
     width: 9.22rem;
     height: 100%;
-    float: right;
-    margin-right:1%;
 }
 .wrap .bgsize{
     background-size: 100% 100%;
     -moz-background-size: 100% 100%;
     -webkit-background-size: 100% 100%;
 }
-.charts{
-    width:100%;
-    height:100%;
-    float: left;
-}
 .agent-box{
     width: 100%;
-    height: 8.7rem;
-    margin-top:0.5rem;
+    height: 8.7rem;  
     margin-bottom:0.5rem;
     padding: 0.3rem;
     background: url(../images/dls_bg.png) no-repeat;
@@ -53,7 +37,6 @@
 .realtime-progress-box{
     width: 100%;
     height: 5.55rem;
-    margin-top:0.5rem;
     margin-bottom:0.5rem;
     padding: 0.3rem;
     background: url(../images/ssdata_bg.png) no-repeat;
@@ -85,6 +68,10 @@
 .list-item span{
     width:calc(100%/3);
     float:left;
+    height:100%;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
 }
 .azcdz-box{
     width: 100%;
@@ -108,9 +95,49 @@
     height:100%;
     float:left;
 }
-@media only screen and (min-width: 1920px){
+
+.cdz-pic{
+    width:5.72rem;
+    height:1.22rem;
+    margin-top:2.2rem;
+    background: url(../images/qgcdzsl.png) no-repeat;
+}
+.cdz-sums{
+    text-align:center;
+    margin-top:0.5rem;
+}
+.cdz-sums i {
+    width:110px;
+    height:180px;  
+    display: inline-block;
+    background: url(../images/number.png) no-repeat;
+    background-position: 0 0px;
+    text-indent: -999em;
+    -webkit-background-size: 100%;
+    background-size: 100%;
+    margin-right:10px;
+}
+.cdz-sums em{
+    color:#ffde00;
+    font-style: normal;
+    font-size: 30px;
+    margin-left:-10px;
+}
+.map-box{
+    width:100%;
+    height:12rem;
+}
+@media only screen and (max-width: 1680px){
+    .wrap{
+        padding-top:1.5rem;
+    }
+}
+@media only screen and (max-width: 1920px){
     .wrap-left {
         width:6.4rem
+    }
+    .warp-mid{
+        width:17rem;
     }
     .wrap-right {
         width:8.4rem
@@ -133,4 +160,8 @@
     .cdfs-box{
         height:5.11rem;
     }
+    .cdz-sums i {
+        width: 55px;
+        height:90px;
+    } 
 }

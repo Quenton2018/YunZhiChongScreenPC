@@ -8,6 +8,8 @@
     <link rel="stylesheet" type="text/css" href="css/index.css">
     <script type="text/javascript" src="js/jquery-1.8.1.min.js"></script>
     <script type="text/javascript" src="js/echarts4.min.js"></script>
+    <script type="text/javascript" src="js/china.js"></script>
+    <script type="text/javascript" src="js/animateBackground-plugin.js"></script>
     <script type="text/javascript">
         ;(function(win, doc) {
             var initFontSize=function(){
@@ -24,13 +26,14 @@
                 myChart4.resize();
                 myChart5.resize();
                 myChart6.resize();
+                myChartMap.resize();
             };
         })(window, window.document);
     </script>
 </head>
 <body>
     <div class="container">
-        <div class="wrap">
+        <div class="wrap flex">
             <div class="wrap-left">
                 <!-- 代理商地区分布 -->
                 <div class="agent-box bgsize">
@@ -47,10 +50,22 @@
                     </div>
                 </div>
             </div>
+            <div class="warp-mid">
+                <div class="cdz-num">
+                    <div class="cdz-pic bgsize"></div>
+                    <div class="cdz-sums"></div>
+                </div>
+                <div class="map-box">
+                    <!--地图-->
+                    <div class="charts map-charts" id="Echartsmap">
+                        
+                    </div>
+                </div>
+            </div>
             <div class="wrap-right">
                 <!-- 实时进度 -->
                 <div class="realtime-progress-box bgsize">
-                    <div class="flex-table" style="height:170px; overflow:hidden">
+                    <div class="flex-table" style="height:200px; overflow:hidden">
                         <div class="flex-header">
                            <span>用户</span>
                            <span>地区</span>
@@ -70,22 +85,32 @@
                            <div class="list-item">
                                 <span>15563233695</span>
                                 <span>湖南</span>
-                                <span>趣商城兑换大米一袋</span>
+                                <span>趣商城兑换大米一袋1</span>
                            </div>
                            <div class="list-item">
                                 <span>18870456321</span>
                                 <span>安徽</span>
-                                <span>趣商城兑换大米一袋</span>
+                                <span>趣商城兑换大米一袋2</span>
                            </div>
                            <div class="list-item">
                                 <span>17925636958</span>
                                 <span>河南</span>
-                                <span>趣商城兑换大米一袋</span>
+                                <span>趣商城兑换大米一袋3</span>
                            </div>
                            <div class="list-item">
                                 <span>17925636959</span>
                                 <span>河北</span>
-                                <span>趣商城兑换大米一袋</span>
+                                <span>趣商城兑换大米一袋4</span>
+                           </div>
+                           <div class="list-item">
+                                <span>17925636959</span>
+                                <span>河北</span>
+                                <span>趣商城兑换大米一袋5</span>
+                           </div>
+                           <div class="list-item">
+                                <span>17925636959</span>
+                                <span>河北</span>
+                                <span>趣商城兑换大米一袋6</span>
                            </div>
                        </div>
                     </div>                   
