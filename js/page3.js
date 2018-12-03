@@ -3,8 +3,14 @@ var myChart1 = echarts.init(document.getElementById('Echarts1'));
 var myChart2 = echarts.init(document.getElementById('Echarts2'));
 
 $(function () {
+    //数字动画  
+    $('.counter').countUp({
+        delay: 10,
+        time: 800
+    });
     loadCharts1();
     loadCharts2();
+    Slider();
 });
 
 function loadCharts1 () {
@@ -179,4 +185,19 @@ function loadCharts2 () {
         }
     };
     myChart2.setOption(option);
+}
+function Slider(){
+    $('.roundabout_box ul').roundabout({
+        duration: 1000,
+        minScale: 0.3,
+        autoplay: true,
+        autoplayDuration: 3000,
+        minOpacity: 0,
+        maxOpacity: 1,
+        reflect: true,
+        startingChild: 1,
+        autoplayInitialDelay: 1000,
+        autoplayPauseOnHover: true,
+        enableDrag: true
+    });
 }

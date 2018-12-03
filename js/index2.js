@@ -4,7 +4,7 @@ var myChart3 = echarts.init(document.getElementById('Echarts3'));
 var myChart4 = echarts.init(document.getElementById('Echarts4'));
 var myChart5 = echarts.init(document.getElementById('Echarts5'));
 var myChart6 = echarts.init(document.getElementById('Echarts6'));
-// var myChartMap = echarts.init(document.getElementById('Echartsmap'));
+var myChartMap = echarts.init(document.getElementById('Echartsmap'));
 $(function () {
     loadoOption1();
     loadoOption2();
@@ -14,7 +14,7 @@ $(function () {
     // AjaxJSON.get(API_URL.chargAddress,function(data){
     //     console.log(data);
     // });
-    // loadoOptionMap();
+    loadoOptionMap();
 });
 
 //加载饼状图1数据
