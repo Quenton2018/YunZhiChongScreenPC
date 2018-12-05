@@ -1,0 +1,83 @@
+/* .container {
+    padding:0.1rem;
+    background-image: url(../images/DataStatistics.png);
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-color:#001b2d;
+    font-family: 'microsoft yahei',Arial,sans-serif;
+} */
+.wrap {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+.wrap-left {
+    width: 8.3rem;
+    height: 100%;
+    float: left;
+    margin-left:3.7%;
+}
+.wrap-right {
+    width: 8.3rem;
+    height: 100%;
+    float: right;
+    margin-right:3.7%;
+}
+.wrap .bgsize{
+    background-size: 100% 100%;
+    -moz-background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+}
+.cdz-box{
+    width: 100%;
+    height: 4rem;
+    margin-top:1rem;
+    margin-bottom:0.15rem;
+    padding: 0.15rem;
+    background: url(../images/cdz-box.png) no-repeat;
+}
+.find-box{
+    width: 100%;
+    height: 4rem;
+    padding: 0.3rem;
+    background: url(../images/find-box.png) no-repeat;
+}
+.area-box{
+    width: 100%;
+    height: 4rem;
+    margin-top:1rem;
+    margin-bottom:0.15rem;
+    padding: 0.15rem;
+    background: url(../images/area-box.png) no-repeat;
+}
+.question-box{
+    width: 100%;
+    height: 4rem;
+    padding: 0.3rem;
+    background: url(../images/question-box.png) no-repeat;
+}
+.cdz-top {
+	width: 80%;
+	padding: 0.2rem 0.25rem;
+	border: 1px solid #2e4378;
+	margin-top: 6.5%;
+	margin-left: 1.5%;
+	color: #65c6e7;
+	font-size: 0.24rem;
+}
+.clear {
+	clear: both;
+}
+.left {
+	float: left;
+}
+.right {
+	float: right;
+}
+
+
+
+
+

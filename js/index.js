@@ -4,32 +4,142 @@ var myChart3 = echarts.init(document.getElementById('Echarts3'));
 var myChart4 = echarts.init(document.getElementById('Echarts4'));
 var myChart5 = echarts.init(document.getElementById('Echarts5'));
 var myChart6 = echarts.init(document.getElementById('Echarts6'));
-// var myChartMap = echarts.init(document.getElementById('Echartsmap'));
+var myChartMap = echarts.init(document.getElementById('Echartsmap'));
 $(function () {
-    loadoOption1();
-    loadoOption2();
-    loadoOption3();
-    loadoOption4();
+    
 
-    // AjaxJSON.get(API_URL.chargAddress,function(data){
-    //     console.log(data);
-    // });
-    // loadoOptionMap();
+
+    startMarquee();
+    AjaxJSON.get(API_URL.getChargingAmount,params,function(res){
+        var nums = res.data;
+        var showNums = parseInt(localStorage.getItem('cdzNums')) || nums;
+        ScrollNums(showNums);
+
+        var scrollNum = setInterval(function () {
+            showNums += randomData();
+            ScrollNums(showNums);
+        }, 3000);
+    });
+    // loadOption1();
+    var params = {};
+    //获取代理商地区分布
+    AjaxJSON.get(API_URL.address,params,function(res){
+        loadOption1(res.data);
+    });
+    //充电桩使用排名
+    AjaxJSON.get(API_URL.chringAddressUseRank,params,function(res){
+        loadOption2(res.data);
+    });
+    //安装点充电桩使用率
+    AjaxJSON.get(API_URL.chringUseRank,params,function(res){
+        loadOption3(res.data);
+    });
+    //充电方式配置
+    AjaxJSON.get(API_URL.chargingWay,params,function(res){
+        loadOption4(res.data);
+    });
+    //地图数据
+    AjaxJSON.get(API_URL.chargAddress,params,function(res){
+        var mapData = res.data;
+        localStorage.setItem('mapJSON',mapData);
+        // var mapJSON
+        loadOptionMap(res.data);
+    });
+    
 });
 
+//数字千分位
+function toThousands(num) {
+    var result = [ ], counter = 0;
+    num = (num || 0).toString().split('');
+    for (var i = num.length - 1; i >= 0; i--) {
+        counter++;
+        result.unshift(num[i]);
+        if (!(counter % 3) && i != 0) { result.unshift(','); }
+    }
+    return result.join('');
+}
+//随机数
+function randomData() {  
+    return Math.round(Math.random()*10);  
+};
+//实时进度
+function startMarquee() {   
+    var $this = $("#marquee");
+    var scrollTimer;
+    $this.hover(function () {
+        clearInterval(scrollTimer);
+    }, function () {
+        scrollTimer = setInterval(function () {
+            scrollNews($this);
+        }, 1000);
+    }).trigger('mousleave');
+
+    function scrollNews(obj) {
+        var $self = obj;
+        var lineHeight = $self.find(".list-item:first").height();
+        $self.animate({
+            "marginTop": -lineHeight + "px"
+        }, 600, function () {
+            $self.css({
+                marginTop: 0
+            }).find(".list-item:first").appendTo($self);
+        })
+    };
+    // function autoScroll(obj){
+    //     var lineHeight = $(obj).find(".list-item:first").height();  
+    //     $(obj).animate({  
+    //         marginTop : -lineHeight + "px"  
+    //     },1000,function(){  
+    //         $(this).find("ul").css({marginTop : "0px"}).find(".list-item:first").appendTo(this);  
+    //     })  
+    // }  
+
+    // var scroll=setInterval('autoScroll("#marquee")',1500);
+    //  $("#marquee").hover(function(){
+    //     console.log("aaa");
+    //     clearInterval(scroll);
+    //  },function(){
+    //     scroll=setInterval('autoScroll("#marquee")',1500);
+    //  });
+};
+//滚动充电桩数字
+function ScrollNums(cdzNums){
+    var nums = toThousands(cdzNums);
+    var it = $(".cdz-sums").children();
+    var len = String(nums).length;
+    for(var i=0;i<len;i++){
+        var num=String(nums).charAt(i);
+        if(it.length<=i){
+            if(num !== ','){
+               $(".cdz-sums").append("<i class='sumsi_"+i+"'></i>");
+            }else{
+                $(".cdz-sums").append("<em class='dh'>，</em>"); 
+            }            
+        }
+        if(num !== ','){
+            var y = -parseInt(num)*90;
+            var obj = $(".sumsi_"+i);
+            obj.animate({
+                    backgroundPosition :'(0 '+String(y)+'px)' 
+                }, 1500,'swing',function(){}
+            );
+        }
+        // console.log(num)
+    }
+    localStorage.setItem('cdzNums',cdzNums);
+    //$("#cur_num").val(n);
+};
 //加载饼状图1数据
-function  loadoOption1(){
-    myChart1.clear(); 
-    var data = [
-        {value:10, name:'南丰'},
-        {value:5, name:'赣州'},
-        {value:15, name:'九江'},
-        {value:25, name:'吉安'},
-        {value:20, name:'抚州'},
-        {value:35, name:'宜春'},
-        {value:30, name:'上饶'},
-        {value:40, name:'景德镇'}
-    ];
+function loadOption1(resData){
+    myChart1.clear();
+    var data = [];
+    resData.forEach(function(item){
+        data.push({
+            value:item.num,
+            name:item.shi
+        });
+    });
     var legendData = data.map(function(item){
         return item.name;
     });
@@ -38,7 +148,7 @@ function  loadoOption1(){
             trigger: 'item',
             formatter: "{a} <br/>{b} : {c} ({d}%)"
         },
-        color:['#8378ea','#2397f0','#32c5e9','#14d1b0','#ff8562','#fb7293','#e7bcf3','#ffc637'],
+        color:['#8378ea','#2397f0','#32c5e9','#14d1b0','#ff8562','#fb7293','#e7bcf3','#ffc637','#e7bcf3','#ffc637'],
         legend: {
             orient: 'horizontal',
             top: '12%',
@@ -47,7 +157,7 @@ function  loadoOption1(){
             textStyle:{
                 fontSize: 12,
                 padding :[0,6,0,0],
-                color: ['#8378ea','#2397f0','#32c5e9','#14d1b0','#ff8562','#fb7293','#e7bcf3','#ffc637']
+                color: ['#8378ea','#2397f0','#32c5e9','#14d1b0','#ff8562','#fb7293','#e7bcf3','#ffc637','#e7bcf3','#ffc637']
             }
         },
         calculable : true,
@@ -55,7 +165,7 @@ function  loadoOption1(){
             {
                 name:'地区分布',
                 type:'pie',
-                radius: ['15%', '60%'],
+                radius: ['10%', '50%'],
                 center : ['50%', '60%'],
                 roseType : 'area',
                 data: data
@@ -63,23 +173,31 @@ function  loadoOption1(){
         ]
     };
     myChart1.setOption(option);
-
-}
-function loadoOption2(){
-    var data = [
-        {value:100, name:'景德镇恒大名郡',ratio:'60%'},
-        {value:60, name:'伟梦清水湾',ratio:'50%'},
-        {value:80, name:'慧谷创意产业园',ratio:'30%'},
-        {value:70, name:'九里象湖',ratio:'40%'},
-        {value:60, name:'景德镇恒大名郡',ratio:'20%'},
-        {value:50, name:'景德镇恒大名郡',ratio:'50%'},
-        {value:90, name:'景德镇恒大名郡',ratio:'60%'}
-    ];
+};
+//加载柱状图1数据
+function loadOption2(resData){
+    // var resData = [
+    //     {value:100, name:'景德镇恒大名郡',useRate:'60%'},
+    //     {value:60, name:'伟梦清水湾',useRate:'50%'},
+    //     {value:80, name:'慧谷创意产业园',useRate:'30%'},
+    //     {value:70, name:'九里象湖',useRate:'40%'},
+    //     {value:60, name:'景德镇恒大名郡',useRate:'20%'},
+    //     {value:50, name:'景德镇恒大名郡',useRate:'50%'},
+    //     {value:90, name:'景德镇恒大名郡',useRate:'60%'}
+    // ];
+    var data = [];
+    resData.forEach(function(item){
+        data.push({
+            taishu:item.value,
+            value:item.useRate,
+            name:item.name
+        });
+    });
     var xAxisData = data.map(function(item){
-        return item.value;
+        return item.taishu;
     });
     var ratioData = data.map(function(item){
-        return item.ratio;
+        return item.value;
     });
     var yAxisData = data.map(function(item){
         return item.name;
@@ -135,6 +253,9 @@ function loadoOption2(){
             axisTick:{
                show:false
             },
+            axisLabel:{
+                align: 'right',
+            }, 
             axisLine:{
                 show:false, 
                 lineStyle:{
@@ -145,7 +266,7 @@ function loadoOption2(){
         },
         series: [
             { // For shadow
-                name: '充电桩使用台数',
+                name: '充电桩使用排名',
                 type: 'bar',
                 barWidth: 12,
                 silent: true,
@@ -153,7 +274,7 @@ function loadoOption2(){
                     normal: {
                         formatter: function(data) {
                             var result = "";
-                                result += xAxisData[data.dataIndex] + "     " + ratioData[data.dataIndex];
+                                result += xAxisData[data.dataIndex] + "     " + ratioData[data.dataIndex]+'%';
                             return result;
                         },
                         show: true,
@@ -201,17 +322,11 @@ function loadoOption2(){
         ]
     };
     myChart2.setOption(option);
-}
-function loadoOption3(){
-    var resData = {
-      "village": 87.71680827945774,
-      "depot": 5.073479272075598,
-      "school": 42.7512900951262,
-      "superMaket": 78.86054851667767,
-      "bikehed": 25.367669506453304
-    };
+};
+//加载柱状图2数据
+function loadOption3(resData){
     var dataAxis = ['小区', '车棚', '停车场', '学校', '商城'];
-    var data = [resData.village, resData.bikehed, resData.depot, resData.school, resData.superMaket];
+    var data = [resData.village, resData.bikeShed, resData.depot, resData.school, resData.superMaket];
     var option = {
         grid: {
             show : false,
@@ -292,12 +407,14 @@ function loadoOption3(){
         ]
     };
     myChart3.setOption(option);
-}
-function loadoOption4(){
-    PercentPie(myChart4,'充电时长',30.71);
-    PercentPie(myChart5,'充满自停',49.24);
-    PercentPie(myChart6,'充满自停+充电时长',20.05);
-}
+};
+//加载饼状图2数据
+function loadOption4(resData){
+
+    PercentPie(myChart4,resData[0].name,resData[0].value);
+    PercentPie(myChart5,resData[1].name,resData[1].value);
+    PercentPie(myChart6,resData[2].name,resData[2].value);
+};
 function PercentPie(myChart,title,value){
     var option = {
         color:[new echarts.graphic.LinearGradient(
@@ -356,244 +473,29 @@ function PercentPie(myChart,title,value){
         }]
     };
     myChart.setOption(option);
-}
-function loadoOptionMap(){
+};
+//加载地图数据
+function loadOptionMap(mapJSON){
     console.log(mapJSON.length)
     var mapArr = [];
     mapJSON.forEach(function(item) {
         mapArr.push({
             name:item.name,
-            value:[parseFloat(item.longitude),parseFloat(item.latitude),parseFloat(item.value)]
+            value:[parseFloat(item.latitude),parseFloat(item.longitude),parseFloat(item.value)]
         })
     });
-    console.log(mapArr)
-    // var mydata = [  
-    //       {name:"南海诸岛",value:0,itemStyle:{  normal:{opacity:0,label:{show:false}}}},  
-    //       {name: '北京',value: randomData() },  
-    //       {name: '天津',value: randomData() },  
-    //       {name: '上海',value: randomData() },  
-    //       {name: '重庆',value: randomData() },  
-    //       {name: '河北',value: randomData() },  
-    //       {name: '河南',value: randomData() },  
-    //       {name: '云南',value: randomData() },  
-    //       {name: '辽宁',value: randomData() },  
-    //       {name: '黑龙江',value: randomData() },  
-    //       {name: '湖南',value: randomData() },  
-    //       {name: '安徽',value: randomData() },  
-    //       {name: '山东',value: randomData() },  
-    //       {name: '新疆',value: randomData() },  
-    //       {name: '江苏',value: randomData() },  
-    //       {name: '浙江',value: randomData() },  
-    //       {name: '江西',value: randomData() },  
-    //       {name: '湖北',value: randomData() },  
-    //       {name: '广西',value: randomData() },  
-    //       {name: '甘肃',value: randomData() },  
-    //       {name: '山西',value: randomData() },  
-    //       {name: '内蒙古',value: randomData() },  
-    //       {name: '陕西',value: randomData() },  
-    //       {name: '吉林',value: randomData() },  
-    //       {name: '福建',value: randomData() },  
-    //       {name: '贵州',value: randomData() },  
-    //       {name: '广东',value: randomData() },  
-    //       {name: '青海',value: randomData() },  
-    //       {name: '西藏',value: randomData() },  
-    //       {name: '四川',value: randomData() },  
-    //       {name: '宁夏',value: randomData() },  
-    //       {name: '海南',value: randomData() },  
-    //       {name: '台湾',value: randomData() },  
-    //       {name: '香港',value: randomData() },  
-    //       {name: '澳门',value: randomData() }  
-    // ];        
-    // var option = {
-
-    //     title : {
-    //         // text: '微博签到数据点亮中国',
-    //         // subtext: 'From ThinkGIS',
-    //         // sublink: 'http://www.thinkgis.cn/public/sina',
-    //         left: 'center',
-    //         top: 'top',
-    //         textStyle: {
-    //             color: '#fff'
-    //         }
-    //     },
-    //     // legend: {
-    //     //     left: 'left',
-    //     //     data: ['强', '中', '弱'],
-    //     //     textStyle: {
-    //     //         color: '#ccc'
-    //     //     }
-    //     // },
-    //     // geo: {
-    //     //     map: 'china',
-    //     //     roam: true,
-    //     //     label: {
-    //     //         emphasis: {
-    //     //             show: false
-    //     //         }
-    //     //     },
-    //     //     itemStyle: {
-    //     //         normal: {
-    //     //             areaColor: '#323c48',
-    //     //             borderColor: '#111'
-    //     //         },
-    //     //         emphasis: {
-    //     //             areaColor: '#2a333d'
-    //     //         }
-    //     //     }
-    //     // },
-    //     series: [{
-    //         type: 'map',
-    //         // coordinateSystem: 'geo',
-    //         mapType: 'china',
-    //         roam: false, 
-    //         itemStyle: {  
-    //             normal: {  
-    //                 color: function (params) {  
-    //                     var colorList = [  
-    //                     '#C1232B', '#B5C334', '#FCCE10', '#E87C25', '#27727B',  
-    //                     '#FE8463', '#9BCA63', '#FAD860', '#F3A43B', '#60C0DD',  
-    //                     '#D7504B', '#C6E579', '#F4E001', '#F0805A', '#26C0C0'  
-    //                    ];  
-    //                     return colorList[params.dataIndex]  
-    //                 }                 
-    //             }  
-    //         },
-    //         label: {  
-    //             normal: {  
-    //                 show: false  //省份名称  
-    //             },  
-    //             emphasis: {  
-    //                 show: false  
-    //             }  
-    //         },
-    //         // data:mydata  //数据 
-    //         itemStyle: {
-    //             shadowBlur: 2,
-    //             shadowColor: 'rgba(14, 241, 242, 0.8)',
-    //             color: 'rgba(14, 241, 242, 0.8)',
-    //             normal:{                           //默认状态
-    //                 areaColor:new echarts.graphic.LinearGradient(
-    //                     0, 0, 0, 1,
-    //                     [
-    //                         {offset: 0, color: '#0e328d'},
-    //                         {offset: 0.5, color: '#1758ce'},
-    //                         {offset: 1, color: '#0c2e6d'}
-    //                     ]
-    //                 ),        //地图本身的颜色
-    //                 // borderColor:'rgb(60,180,207)',     //省份的边框颜色
-    //                 borderWidth:0,                     //省份的边框宽度
-    //                 opacity:0.8,                       //图形透明度
-    //             },
-    //             emphasis: {                          //高亮状态
-    //                 areaColor: '#0a3690',  //高亮时候地图显示的颜色
-    //                 borderWidth: 0                  //高亮时候的边框宽度
-    //             },
-
-    //         },
-    //         // data: weiboData[1]
-    //     }]
-    // };
-    // myChartMap.setOption(option);
-// http://echarts.baidu.com/option.html#series-map.geoIndex
+    // http://echarts.baidu.com/option.html#series-map.geoIndex
     // http://gallery.echartsjs.com/editor.html?c=xrJU-aE-LG
-    var mapName = 'china'
-    var data = [
-        {name:"南海诸岛",value:0,itemStyle:{  normal:{opacity:0,label:{show:false}}}},
-        {name:"北京",value:5},
-        {name:"天津",value:42},
-        {name:"河北",value:102},
-        {name:"山西",value:81},
-        {name:"内蒙古",value:47},
-        {name:"辽宁",value:67},
-        {name:"吉林",value:82},
-        {name:"黑龙江",value:66},
-        {name:"上海",value:24},
-        {name:"江苏",value:92},
-        {name:"浙江",value:114},
-        {name:"安徽",value:109},
-        {name:"福建",value:116},
-        {name:"江西",value:91},
-        {name:"山东",value:119},
-        {name:"河南",value:137},
-        {name:"湖北",value:116},
-        {name:"湖南",value:114},
-        {name:"重庆",value:91},
-        {name:"四川",value:125},
-        {name:"贵州",value:62},
-        {name:"云南",value:83},
-        {name:"西藏",value:9},
-        {name:"陕西",value:80},
-        {name:"甘肃",value:56},
-        {name:"青海",value:10},
-        {name:"宁夏",value:18},
-        {name:"新疆",value:111},
-        {name:"广东",value:123},
-        {name:"广西",value:59},
-        {name:"海南",value:14},
-    ];
-    
-    var geoCoordMap = {};
-    
-    /*获取地图数据*/
-    myChartMap.showLoading();
-    var mapFeatures = echarts.getMap(mapName).geoJson.features;
-    myChartMap.hideLoading();
-    mapFeatures.forEach(function(v) {
-
-        // 地区名称
-        var name = v.properties.name;
-        // 地区经纬度
-        geoCoordMap[name] = v.properties.cp;
-
-    });
-
-    // console.log("============geoCoordMap===================")
-    // console.log(geoCoordMap)
-    // console.log("================data======================")
-    
-    var max = 480,
+    var mapName = 'china';
+    var max = 400,
         min = 9; // todo 
     var maxSize4Pin = 100,
         minSize4Pin = 20;
-
-    var convertData = function(data) {
-        var res = [];
-        for (var i = 0; i < data.length; i++) {
-            var geoCoord = geoCoordMap[data[i].name];
-            if (geoCoord) {
-                res.push({
-                    name: data[i].name,
-                    value: geoCoord.concat(data[i].value),
-                });
-            }
-        }
-        return res;
-    };
-    // console.log(data)
-    // console.log(convertData(data))
-    option = {
-        visualMap: {
-            show: false,
-            min: 0,
-            max: 300,
-            left: 'left',
-            top: 'bottom',
-            calculable: true,
-            seriesIndex: [1],
-            inRange: {
-                // color: ['#3B5077', '#031525'] // 蓝黑
-                // color: ['#ffc0cb', '#800080'] // 红紫
-                // color: ['#3C3B3F', '#605C3C'] // 黑绿
-                // color: ['#0f0c29', '#302b63', '#24243e'] // 黑紫黑
-                // color: ['#23074d', '#cc5333'] // 紫红
-                // color: ['#00467F'] // 蓝绿
-                // color: ['#00ffff','#00cfff','#006ced','#ffe000','#ffa800','#ff5b00','#ff3000']
-                // color: ['#1488CC', '#2B32B2'] // 浅蓝
-                // color: ['#00467F', '#A5CC82'] // 蓝绿
-                // color: ['#00467F', '#A5CC82'] // 蓝绿
-                // color: ['#00467F', '#A5CC82'] // 蓝绿
-                // color: ['#00467F', '#A5CC82'] // 蓝绿
-
+    var option = {
+        tooltip: {
+            trigger: 'item',
+            formatter: function (params) {
+                return params.name + ' : ' + params.value[2];
             }
         },
         geo: {
@@ -636,20 +538,30 @@ function loadoOptionMap(){
         },
         series: [
             {
+                type: 'map',
+                map: mapName,
+                hoverable : true,
+                geoIndex: 0,
+                // aspectScale: 0.75, //长宽比
+                // showLegendSymbol: false, // 存在legend时显示
+                // data: convertData(data)
+            },
+            {
                 name: '白点',
-                type: 'effectScatter',
+                type: 'scatter',
                 coordinateSystem: 'geo',
                 data: mapArr,
-                symbolSize: function(val) {
-                    return val[2] / 20;
-                },
+                symbolSize:5,
+                // symbolSize: function(val) {
+                //     return val[2] / 8;
+                // },
                 rippleEffect: {
                     brushType: 'stroke'
                 },
                 hoverAnimation: false,
                 itemStyle: {
                     normal: {
-                        color: '#05C3F9'
+                        color: '#fff'
                     }
                 },
                 // itemStyle: {
@@ -667,28 +579,49 @@ function loadoOptionMap(){
                 //     }
                 // }
             },
-            {
-                type: 'map',
-                map: mapName,
-                hoverable : true,
-                geoIndex: 0,
-                // aspectScale: 0.75, //长宽比
-                // showLegendSymbol: false, // 存在legend时显示
-                // data: convertData(data)
-            },
+            // {
+            //     name: '黄点',
+            //     type: 'effectScatter',
+            //     coordinateSystem: 'geo',
+            //     data: mapArr.sort(function(a, b) {
+            //         return b.value - a.value;
+            //     }).slice(0, 50),
+            //     symbolSize: function(val) {
+            //         return val[2] / 20;
+            //     },
+            //     rippleEffect: {
+            //         brushType: 'stroke'
+            //     },
+            //     hoverAnimation: true,
+            //     label: {
+            //         normal: {
+            //             formatter: '{b}',
+            //             position: 'right',
+            //             show: false
+            //         }
+            //     },
+            //     itemStyle: {
+            //         normal: {
+            //             color: 'yellow',
+            //             shadowBlur: 50,
+            //             shadowColor: 'yellow'
+            //         }
+            //     },
+            //     zlevel: 1
+            // },
             // {
             //     name: '气泡',
             //     type: 'scatter',
             //     coordinateSystem: 'geo',
-            //     symbol: 'image://./images/cdz_icon2.png', //气泡
-            //     symbolSize: [12, 20],
-            //     // symbol:'pin',
-            //     // symbolSize: function(val) {
-            //     //     var a = (maxSize4Pin - minSize4Pin) / (max - min);
-            //     //     var b = minSize4Pin - a * min;
-            //     //     b = maxSize4Pin - a * max;
-            //     //     return a * val[2] + b;
-            //     // },
+            //     // symbol: 'image://./images/cdz_icon2.png', //气泡
+            //     // symbolSize: [12, 20],
+            //     symbol:'pin',
+            //     symbolSize: function(val) {
+            //         var a = (maxSize4Pin - minSize4Pin) / (max - min);
+            //         var b = minSize4Pin - a * min;
+            //         b = maxSize4Pin - a * max;
+            //         return a * val[2] + b;
+            //     },
             //     symbolKeepAspect: false,
             //     hoverAnimation: false,
             //     // symbolOffset:[0, '-100%'], 
@@ -704,7 +637,7 @@ function loadoOptionMap(){
             //         }
             //     },
             //     zlevel: 6,
-            //     data: convertData(data),
+            //     data: mapArr,
             // },
             // {
             //     name: "图标",
@@ -732,37 +665,9 @@ function loadoOptionMap(){
             //             }
             //         }
             //     },
-            //     data: convertData(data)
-            // },
-            // {
-            //     name: '黄点',
-            //     type: 'effectScatter',
-            //     coordinateSystem: 'geo',
-            //     data: convertData(data.sort(function(a, b) {
+            //     data: mapArr.sort(function(a, b) {
             //         return b.value - a.value;
-            //     }).slice(0, 5)),
-            //     symbolSize: function(val) {
-            //         return val[2] / 20;
-            //     },
-            //     rippleEffect: {
-            //         brushType: 'stroke'
-            //     },
-            //     hoverAnimation: true,
-            //     label: {
-            //         normal: {
-            //             formatter: '{b}',
-            //             position: 'right',
-            //             show: false
-            //         }
-            //     },
-            //     itemStyle: {
-            //         normal: {
-            //             color: 'yellow',
-            //             shadowBlur: 10,
-            //             shadowColor: 'yellow'
-            //         }
-            //     },
-            //     zlevel: 1
+            //     }).slice(0, 5)
             // },
             // {
             //     name: '红点',
@@ -798,93 +703,4 @@ function loadoOptionMap(){
         ]
     };
     myChartMap.setOption(option);
-}
-startmarquee();
-function startmarquee() {   
-    var $this = $("#marquee");
-    var scrollTimer;
-    $this.hover(function () {
-        clearInterval(scrollTimer);
-    }, function () {
-        scrollTimer = setInterval(function () {
-            scrollNews($this);
-        }, 1000);
-    }).trigger('mousleave');
-
-    function scrollNews(obj) {
-        var $self = obj;
-        var lineHeight = $self.find(".list-item:first").height();
-        $self.animate({
-            "marginTop": -lineHeight + "px"
-        }, 600, function () {
-            $self.css({
-                marginTop: 0
-            }).find(".list-item:first").appendTo($self);
-        })
-    };
-    /*底部轮播图*/
-    // function autoScroll(obj){
-    //     var lineHeight = $(obj).find(".list-item:first").height();  
-    //     $(obj).animate({  
-    //         marginTop : -lineHeight + "px"  
-    //     },1000,function(){  
-    //         $(this).find("ul").css({marginTop : "0px"}).find(".list-item:first").appendTo(this);  
-    //     })  
-    // }  
-
-    // var scroll=setInterval('autoScroll("#marquee")',1500);
-    //  $("#marquee").hover(function(){
-    //     console.log("aaa");
-    //     clearInterval(scroll);
-    //  },function(){
-    //     scroll=setInterval('autoScroll("#marquee")',1500);
-    //  });
-
-
 };
-function show_num(cdzNums){
-    var nums = toThousands(cdzNums);
-    var it = $(".cdz-sums").children();
-    var len = String(nums).length;
-    for(var i=0;i<len;i++){
-        var num=String(nums).charAt(i);
-        if(it.length<=i){
-            if(num !== ','){
-               $(".cdz-sums").append("<i class='sumsi_"+i+"'></i>");
-            }else{
-                $(".cdz-sums").append("<em class='dh'>，</em>"); 
-            }            
-        }
-        if(num !== ','){
-            var y = -parseInt(num)*90;
-            var obj = $(".sumsi_"+i);
-            obj.animate({
-                    backgroundPosition :'(0 '+String(y)+'px)' 
-                }, 1500,'swing',function(){}
-            );
-        }
-        // console.log(num)
-    }
-    localStorage.setItem('cdzNums',cdzNums);
-    // $("#cur_num").val(n);
-}
-//数字千分位
-function toThousands(num) {
-    var result = [ ], counter = 0;
-    num = (num || 0).toString().split('');
-    for (var i = num.length - 1; i >= 0; i--) {
-        counter++;
-        result.unshift(num[i]);
-        if (!(counter % 3) && i != 0) { result.unshift(','); }
-    }
-    return result.join('');
-}
-var showNums = parseInt(localStorage.getItem('cdzNums')) || 192546738;
-show_num(showNums);
-function randomData() {  
-     return Math.round(Math.random()*50);  
-} 
-var scrollNum = setInterval(function () {
-    showNums += randomData();
-    show_num(showNums);
-}, 3000);

@@ -20,6 +20,7 @@ body{
   color: #fff;
   font-family: Helvetica Neue,Helvetica,'PingFang SC','Hiragino Sans GB','Microsoft YaHei',Arial,sans-serif;
 }
+.anchorBL{display:none}
 .container {
     background-image: url(../images/page_bg.jpg);
     background-position: top center;
@@ -54,4 +55,27 @@ body{
     display: flex;
     justify-content:space-around;
     align-items: center; 
+}
+.toast-wrap{
+    opacity: 0;
+    position: fixed;
+    bottom: 10%;
+    color: #fff;
+    width: 100%;
+    text-align: center;
+}
+.toast-msg{
+    background-color: rgba(0,0,0,0.7);
+    padding: 2px 5px;
+    border-radius: 5px;
+}
+.toastAnimate{
+  animation: toastKF 2s;
+}
+@keyframes toastKF{
+    0% {opacity: 0;}
+    25% {opacity: 1; z-index: 9999}
+    50% {opacity: 1; z-index: 9999}
+    75% {opacity: 1; z-index: 9999}
+    100% {opacity: 0; z-index: 0}
 }

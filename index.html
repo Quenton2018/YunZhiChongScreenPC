@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>2018云智充数据分享</title>
     <meta name="viewport" content="initial-scale=1,maximum-scale=1, minimum-scale=1">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" type="text/css" href="css/common.css">
     <link rel="stylesheet" type="text/css" href="css/index.css">
@@ -28,7 +29,7 @@
                 myChart4.resize();
                 myChart5.resize();
                 myChart6.resize();
-                // myChartMap.resize();
+                myChartMap.resize();
             };
         })(window, window.document);
     </script>
@@ -54,15 +55,15 @@
             </div>
             <div class="warp-mid">
                 <div class="cdz-num">
-                    <div class="cdz-pic bgsize" style="background:none;margin:0;"></div>
-                    <div class="cdz-sums" style="margin-bottom:0.3rem;"></div>
+                    <div class="cdz-pic bgsize"></div>
+                    <div class="cdz-sums"></div>
                 </div>
                 <div class="map-box">
                     <!--地图-->
-                    <!-- <div class="charts map-charts" id="Echartsmap">
+                    <div class="charts map-charts" id="Echartsmap">
                         
-                    </div> -->
-                    <div class="charts map-charts" id="map"></div>
+                    </div>
+                    <!-- <div class="charts map-charts" id="map"></div> -->
                 </div>
             </div>
             <div class="wrap-right">
@@ -150,17 +151,14 @@
                 </div>
             </div>
         </div>
+        <div class="toast-wrap">
+            <span class="toast-msg"></span>
+        </div>
     </div>
     <script type="text/javascript" src='json/map.js'></script>
 
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=A1LU7iHS0avqQwPLAxbhKn0UYSQCuRVH"></script>
-
-    <!-- <script type="text/javascript" src="http://api.map.baidu.com/library/AreaRestriction/1.2/src/AreaRestriction_min.js"></script> -->
-    <script type="text/javascript" src="map/mapv.js"></script>
-    <script type="text/javascript" src="map/swfobject.js"></script>
-    <script type="text/javascript" src="map/web_socket.js"></script>
-    <script type="text/javascript" src="map/socket_connect.js"></script>
-    <script type="text/javascript" src="map/mapIndex.js"></script>
+    
     <script type="text/javascript" src="js/index.js"></script>
 </body>
 </html>
