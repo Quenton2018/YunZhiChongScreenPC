@@ -1,10 +1,11 @@
+
 var apiHost = 'http://192.168.1.106:8081';
-//var apiHost = 'http://39.106.62.16:8081';
+var apiHost = 'http://39.106.62.16:8081';
 
 
 var API_URL = {};
 
-API_URL.getChargingAmount = apiHost + "/api/chart/getChargingAmount"; //获取全国充电桩数量
+API_URL.getChargingAmount = apiHost + "/api/count/getChargingAmount"; //获取全国充电桩数量
 
 API_URL.address = apiHost + "/largeScreen/parner/address"; //获取代理商地区分布
 
