@@ -139,12 +139,12 @@ function loadOption1(resData){
             formatter: "{a} <br/>{b} : {c} ({d}%)"
         },
         color:['#8378ea','#2397f0','#32c5e9','#14d1b0','#ff8562','#fb7293','#e7bcf3','#ffc637','#e7bcf3','#ffc637'],
-        calculable : false,
+        calculable : true,
         series : [
             {
-                name:'代理商地区分布',
+                name:'地区分布',
                 type:'pie',
-                radius: ['10%','55%'],
+                radius: ['10%', '50%'],
                 center : ['50%', '55%'],
                 roseType : 'area',
                 data: data
@@ -179,11 +179,11 @@ function loadOption2(resData){
         return item.value;
     });
     var yAxisData = data.map(function(item){
-    	if (item.name.length > 7) {
-	      return item.name.substring(0, 7) + "...";
-	    } else {
-	      return item.name;
-	    }
+        if (item.name.length > 7) {
+          return item.name.substring(0, 7) + "...";
+        } else {
+          return item.name;
+        }
     });
     var xMax = 100;
     var dataShadow = [];
@@ -471,9 +471,6 @@ function loadOptionMap(mapJSON){
     var option = {
         tooltip: {
             trigger: 'item',
-            position:'top',
-            padding:[8,16],
-            backgroundColor:'#00cccd',
             formatter: function (params) {
                 return  '片区：' + params.data.groupName + '<br/> 设备：' + params.name;
             }
@@ -513,8 +510,8 @@ function loadOptionMap(mapJSON){
                 //     borderColor: '#2bfaff'
                 // },
                 normal: {
-                    areaColor: 'rgba(20,247,250,0.1)',
-                    borderWidth: 0.1,
+                    areaColor: 'none',
+                    borderWidth: 0,
                     borderColor:'#0cb7cc',
                     shadowColor: 'rgba(0,255,252, 1)',
                     shadowBlur: 10
@@ -556,7 +553,7 @@ function getSeries(mapJSON){
             normal: {
                 areaColor: '#006fff',
                 borderColor: '#0145a4',
-                borderWidth: 0.1
+                borderWidth: 0
             },
             emphasis: {
                 areaColor: '#006fff'
@@ -574,7 +571,7 @@ function getSeries(mapJSON){
         }
         seriesPointData[index % 10].push(seriesPoint);
     });
-    var colorList = ['#fff','#fff','#00fffc','#00fffc','#00fffc', '#00fffc','#6cefb0','#fff','yellow','#fff','yellow'];
+    var colorList = ['#fff','#fff','yellow','blue','green', '#ef6c77','#a7fa91','red','yellow','#fff','yellow'];
 
     seriesPointData.forEach(function(item,index){
         var typeList = 'scatter';
@@ -583,20 +580,13 @@ function getSeries(mapJSON){
             type: typeList,
             coordinateSystem: 'geo',
             data: item,
-            // symbolSize:3,
+            symbolSize:3,
             // symbol: 'image://./images/cdz_icon2.png', //气泡
             // symbolSize: [12, 20],
-            symbolSize: function(val) {
-                // console.log(val)
-                // return val[2] / 5;
-                if(val[2] == 10){
-                    return 1;
-                }else if(val[2] > 50){
-                    return 5;
-                }else{
-                    return 2;
-                }
-            },
+            // symbolSize: function(val) {
+            //     // console.log(val)
+            //     return val[2] / 5;
+            // },
             rippleEffect: {
                 brushType: 'stroke'
             },
