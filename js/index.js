@@ -193,8 +193,8 @@ function loadOption2(resData){
         return item.value;
     });
     var yAxisData = data.map(function(item){
-    	if (item.name.length > 14) {
-	      return item.name.substring(0, 14) + "...";
+    	if (item.name.length > 7) {
+	      return item.name.substring(0, 7) + "...";
 	    } else {
 	      return item.name;
 	    }
@@ -259,7 +259,7 @@ function loadOption2(resData){
                     color:'#fff'
                 }
             },
-            offset:185,
+            offset:90,
             data: yAxisData,
         },
         series: [
