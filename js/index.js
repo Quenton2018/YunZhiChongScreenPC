@@ -139,30 +139,6 @@ function loadOption1(resData){
             formatter: "{a} <br/>{b} : {c} ({d}%)"
         },
         color:['#8378ea','#2397f0','#32c5e9','#14d1b0','#ff8562','#fb7293','#e7bcf3','#ffc637','#e7bcf3','#ffc637'],
-<<<<<<< HEAD
-//      legend: {
-//          orient: 'horizontal',
-//          top: '12%',
-//          left: 'center',
-//          data: legendData,
-//          textStyle:{
-//              fontSize: 12,
-//              padding :[0,6,0,0],
-//              color: ['#8378ea','#2397f0','#32c5e9','#14d1b0','#ff8562','#fb7293','#e7bcf3','#ffc637','#e7bcf3','#ffc637']
-//          }
-=======
-//      legend: {
-//          orient: 'horizontal',
-//          top: '12%',
-//          left: 'center',
-//          data: legendData,
-//          textStyle:{
-//              fontSize: 12,
-//              padding :[0,6,0,0],
-//              color: ['#8378ea','#2397f0','#32c5e9','#14d1b0','#ff8562','#fb7293','#e7bcf3','#ffc637','#e7bcf3','#ffc637']
-//          }
->>>>>>> 0e1a1416f3c9cf7fcf35d2c656bb639fe7560d77
-//      },
         calculable : true,
         series : [
             {
@@ -260,13 +236,8 @@ function loadOption2(resData){
             axisTick:{
                show:false
             },
-<<<<<<< HEAD
             axisLabel:{
                 align: 'left',
-=======
-            axisLabel:{
-                align: 'left',
->>>>>>> 0e1a1416f3c9cf7fcf35d2c656bb639fe7560d77
             }, 
             axisLine:{
                 show:false, 
@@ -309,7 +280,7 @@ function loadOption2(resData){
                 data: dataShadow
             },
             {
-                name: '充电桩使用台数',
+                name: '充电桩使用率',
                 type: 'bar',
                 z: 3,
                 barWidth:12,
