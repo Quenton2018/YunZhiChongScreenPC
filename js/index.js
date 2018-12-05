@@ -139,24 +139,24 @@ function loadOption1(resData){
             formatter: "{a} <br/>{b} : {c} ({d}%)"
         },
         color:['#8378ea','#2397f0','#32c5e9','#14d1b0','#ff8562','#fb7293','#e7bcf3','#ffc637','#e7bcf3','#ffc637'],
-        legend: {
-            orient: 'horizontal',
-            top: '12%',
-            left: 'center',
-            data: legendData,
-            textStyle:{
-                fontSize: 12,
-                padding :[0,6,0,0],
-                color: ['#8378ea','#2397f0','#32c5e9','#14d1b0','#ff8562','#fb7293','#e7bcf3','#ffc637','#e7bcf3','#ffc637']
-            }
-        },
+//      legend: {
+//          orient: 'horizontal',
+//          top: '12%',
+//          left: 'center',
+//          data: legendData,
+//          textStyle:{
+//              fontSize: 12,
+//              padding :[0,6,0,0],
+//              color: ['#8378ea','#2397f0','#32c5e9','#14d1b0','#ff8562','#fb7293','#e7bcf3','#ffc637','#e7bcf3','#ffc637']
+//          }
+//      },
         calculable : true,
         series : [
             {
                 name:'地区分布',
                 type:'pie',
                 radius: ['10%', '50%'],
-                center : ['50%', '60%'],
+                center : ['50%', '55%'],
                 roseType : 'area',
                 data: data
             }
@@ -190,7 +190,11 @@ function loadOption2(resData){
         return item.value;
     });
     var yAxisData = data.map(function(item){
-        return item.name;
+    	if (item.name.length > 7) {
+	      return item.name.substring(0, 7) + "...";
+	    } else {
+	      return item.name;
+	    }
     });
     var xMax = 100;
     var dataShadow = [];
@@ -227,8 +231,8 @@ function loadOption2(resData){
         },
         grid: {
             show : false,
-            left: 10,
-            right:100,
+            left: 20,
+            right:85,
             bottom: 30,
             top: '20%',
             containLabel: true
@@ -244,7 +248,7 @@ function loadOption2(resData){
                show:false
             },
             axisLabel:{
-                align: 'right',
+                align: 'left',
             }, 
             axisLine:{
                 show:false, 
@@ -252,6 +256,7 @@ function loadOption2(resData){
                     color:'#fff'
                 }
             },
+            offset:90,
             data: yAxisData,
         },
         series: [
