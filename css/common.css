@@ -59,15 +59,16 @@ body{
 .toast-wrap{
     opacity: 0;
     position: fixed;
-    bottom: 10%;
+    bottom: 50%;
     color: #fff;
     width: 100%;
     text-align: center;
 }
 .toast-msg{
     background-color: rgba(0,0,0,0.7);
-    padding: 2px 5px;
+    padding: 10px 20px;
     border-radius: 5px;
+    font-size:0.26rem;
 }
 .toastAnimate{
   animation: toastKF 2s;

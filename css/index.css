@@ -7,9 +7,9 @@
 .cdz-box{width:100%;height:8.94rem;padding:0.3rem;background:url(../images/cdz_bg.png) no-repeat;}
 .realtime-progress-box{width:100%;height:5.55rem;margin-bottom:0.5rem;padding:0.3rem;background:url(../images/ssdata_bg.png) no-repeat;position:relative;}
 .flex-table{width:92%;position:absolute;bottom:15px;left:4%;text-align:center;overflow:hidden;font-family:'PingFangSC-Regular',sans-serif;}
-.flex-header span{width:calc(100%/3);float:left;color:#ced00a;font-size:14px;padding:5px 0;}
+.flex-header span{width:50%;float:left;color:#ced00a;font-size:14px;padding:5px 0;}
 .list-item{width:100%;padding:5px 0;margin-bottom:3px;background:rgba(0,137,255,0.15);overflow:hidden;list-style: none;}
-.list-item span{width:calc(100%/3);float:left;height:100%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+.list-item span{width:50%;float:left;height:100%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
 .azcdz-box{width:100%;height:5.72rem;margin-bottom:0.5rem;padding:0.3rem;background:url(../images/azcdz_bg.png) no-repeat;}
 .cdfs-box{width:100%;height:5.6rem;padding:0.3rem;background:url(../images/cdfs_bg.png) no-repeat;}
 .flex-box{width:100%;height:100%;}

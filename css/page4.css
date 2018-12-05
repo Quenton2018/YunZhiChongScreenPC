@@ -12,14 +12,15 @@
 .wrap-dlpm{width:8.5rem;height:7.58rem;padding-top:1rem;background:url(../images/page4_03.png) no-repeat;float:right;position:relative;}
 .flex-table{width:92%;position:absolute;bottom:26px;left:3.5%;text-align:center;overflow:hidden;font-family:'PingFangSC-Regular',sans-serif;}
 .flex-header{margin-bottom:0.6rem;}
-.flex-header span{width:calc(100%/3);float:left;color:#00fbfe;font-size:0.3rem;padding:5px 0;}
-.list-item{width:100%;padding:5px 0;margin-bottom:0.1rem;background:rgba(0,255,255,0.36);overflow:hidden;font-size:0.26rem;}
+.flex-header span{width:25%;float:left;color:#00fbfe;font-size:0.26rem;padding:5px 0;}
+.list-item{width:100%;padding:5px 0;margin-bottom:0.1rem;background:rgba(0,255,255,0.36);overflow:hidden;font-size:0.26rem;border-radius: 0.2rem;}
 .list-item:nth-child(even){background:rgba(106,180,246,0.3);}
-.list-item span{width:calc(100%/3);float:left;height:100%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+.list-item span{width:25%;float:left;height:100%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
 .list-item span.mz{font-size:0.26rem;}
 .list-item span em{font-style:normal;}
 .list-item span sub{font-style:normal;font-size:0.16rem;vertical-align:bottom;}
-.list-item span.area-name{font-size:0.2rem;display:contents;}
+.list-item span.area-name{font-size:0.2rem;}
+.list-item span.area-dls{font-size:0.2rem;display:contents;}
 @media only screen and (max-width:1920px){
     .wrap{padding-top:10%;}
 }

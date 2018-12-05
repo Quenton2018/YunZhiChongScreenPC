@@ -7,14 +7,37 @@
         var myChart5 = echarts.init(document.getElementById('question'));
 		
 		$(function () {
-		    loadoOption1();
-		    loadoOption2();
-		    loadoOption3();
-		    loadoOption4();
-		    loadoOption5();
+		    loadOption1();
+		    loadOption3();    
+		    loadOption5();
+		    
+		    AjaxJSON.get(API_URL.chringUseRank,{},function(res){
+		    	loadOption4(res.data);
+		    });
+		    var load = setInterval(function(){
+		    	AjaxJSON.get(API_URL.chringUseRank,{},function(res){
+			    	loadOption4(res.data);
+			    })
+		    },30000);
+		    
+		    AjaxJSON.get(API_URL.chringAmount,{},function(res){
+//			    console.log(res.data)
+			    $("#Num").text(res.data+'台')
+			});
+			
+			AjaxJSON.get(API_URL.chringPlace,{},function(res){
+		    	loadOption2(res.data);
+//		    	console.log(res.data['上网查询'])
+		    });
+		    var find = setInterval(function(){
+		    	AjaxJSON.get(API_URL.chringPlace,{},function(res){
+			    	loadOption2(res.data);
+			    });
+		    },3000);
+			
 		});
 		
-	function  loadoOption1(){
+	function  loadOption1(){
 			myChart1.clear();
 			var cdzstate = [
 			                {value:4000, name:'在线充电桩'},
@@ -61,14 +84,20 @@
 			};
         myChart1.setOption(option);
 	}
-	function  loadoOption2(){
+	function  loadOption2(resData){
 		myChart2.clear();
-		var way = ['手机app','上网查询','电子地图','求助询问'];
+//		var way = ['手机app','上网查询','电子地图','求助询问'];
+//		var city = ['江西','上海','深圳','天津','广西'];
+//		var num1 = [320, 302, 301, 334, 390];
+//		var num2 = [120, 132, 101, 134, 90];
+//		var num3 = [220, 182, 191, 234, 290];
+//		var num4 = [150, 212, 201, 154, 50];
+		var way = ['上网查询','电子地图','求助询问','手机App'];
 		var city = ['江西','上海','深圳','天津','广西'];
-		var num1 = [320, 302, 301, 334, 390];
-		var num2 = [120, 132, 101, 134, 90];
-		var num3 = [220, 182, 191, 234, 290];
-		var num4 = [150, 212, 201, 154, 50];
+		var num1 = resData['上网查询'];
+		var num2 = resData['电子地图'];
+		var num3 = resData['求助询问'];
+		var num4 = resData['手机APP'];
 		option = {
 		    tooltip : {						
 		        trigger: 'axis',			
@@ -144,7 +173,7 @@
 		    },
 		    series: [				
 		        {
-		            name: '手机app',		
+		            name: '上网查询',		
 		            type: 'bar',		
 		            stack: '总量',
 		            label: {
@@ -153,27 +182,11 @@
 		                    position: 'insideRight',
 		                }
 		            },
-		            data: num1.reverse(),
+		            data: num1,
 		            itemStyle:{
 		            	color:'#0035f9',
 		            	barBorderRadius: [25,0,0,25],
 					},
-		            barWidth:22
-		        },
-		        {
-		            name: '上网查询',
-		            type: 'bar',
-		            stack: '总量',
-		            label: {
-		                normal: {
-		                    show: false,
-		                    position: 'insideRight'
-		                }
-		            },
-		            data: num2.reverse(),
-		            itemStyle:{
-		            	color:'#ff4e4e'
-		            },
 		            barWidth:22
 		        },
 		        {
@@ -186,9 +199,9 @@
 		                    position: 'insideRight'
 		                }
 		            },
-		            data: num3.reverse(),
+		            data: num2,
 		            itemStyle:{
-		            	color:'#efe39b'
+		            	color:'#ff4e4e'
 		            },
 		            barWidth:22
 		        },
@@ -202,7 +215,23 @@
 		                    position: 'insideRight'
 		                }
 		            },
-		            data: num4.reverse(),
+		            data: num3,
+		            itemStyle:{
+		            	color:'#efe39b'
+		            },
+		            barWidth:22
+		        },
+		        {
+		            name: '手机App',
+		            type: 'bar',
+		            stack: '总量',
+		            label: {
+		                normal: {
+		                    show: false,
+		                    position: 'insideRight'
+		                }
+		            },
+		            data: num4,
 		            itemStyle:{
 		            	color:'#25f3e6',
 				        barBorderRadius: [0,25,25,0],            
@@ -214,7 +243,7 @@
         myChart2.setOption(option);
 	}
 
-	function  loadoOption3(){
+	function  loadOption3(){
 		myChart3.clear();		
 		var percent = [0.5333,0.2667,0.20];
 		var grayBar = [1, 1, 1];
@@ -294,10 +323,11 @@
         myChart3.setOption(option);
 	}
 	
-	function  loadoOption4(){
+	function  loadOption4(resData){
 		myChart4.clear();
 		var city = ['江西省', '江苏省', '安徽省', '河北省', '湖南省', '浙江省'];
-		var num = [3310, 5100, 4029, 5000, 6050, 7030];
+//		var num = [3310, 5100, 4029, 5000, 6050, 7030];
+		var num = [resData.village, resData.depot, resData.school, resData.superMaket, resData.bikeShed,resData.bikeShed];
 		option = {
 			tooltip : {
 		        trigger: 'axis',
@@ -379,7 +409,7 @@
         myChart4.setOption(option);
 	}	
 	
-	function  loadoOption5(){
+	function  loadOption5(){
 		myChart5.clear();
 		var cdzList = ['充电桩收益','充电桩收费','充电桩商业化','充电桩安装','充电桩加盟','充电桩政策','充电桩APP'];
 		var bgcolor = ['#ff4e4e','#ffff43', '#25f3e6', '#0035f9', '#efe39b','#97dd42','#f19f4e'];

@@ -7,21 +7,26 @@ var myChart6 = echarts.init(document.getElementById('Echarts6'));
 var myChartMap = echarts.init(document.getElementById('Echartsmap'));
 $(function () {
     
-
-
-    startMarquee();
+    var params = {};
     AjaxJSON.get(API_URL.getChargingAmount,params,function(res){
         var nums = res.data;
-        var showNums = parseInt(localStorage.getItem('cdzNums')) || nums;
-        ScrollNums(showNums);
+        // var showNums = parseInt(localStorage.getItem('cdzNums')) || nums;
+        // ScrollNums(showNums);
 
-        var scrollNum = setInterval(function () {
-            showNums += randomData();
-            ScrollNums(showNums);
-        }, 3000);
+        // var scrollNum = setInterval(function () {
+        //     showNums += randomData();
+        //     ScrollNums(showNums);
+        // }, 3000);
     });
-    // loadOption1();
-    var params = {};
+    AjaxJSON.get(API_URL.findLastLogs,params,function(res){
+        var html = '';
+        $.each(res.data,function(k,v){
+            html +='<li class="list-item"><span>'+v.mobile+'</span><span>'+v.desc+'</span></li>';
+        });
+        $('.logList').html(html);
+        startMarquee();      
+    });
+    
     //获取代理商地区分布
     AjaxJSON.get(API_URL.address,params,function(res){
         loadOption1(res.data);
@@ -66,70 +71,58 @@ function randomData() {
 //实时进度
 function startMarquee() {   
     var $this = $("#marquee");
-    var scrollTimer;
-    $this.hover(function () {
-        clearInterval(scrollTimer);
-    }, function () {
-        scrollTimer = setInterval(function () {
-            scrollNews($this);
-        }, 1000);
-    }).trigger('mousleave');
-
-    function scrollNews(obj) {
-        var $self = obj;
-        var lineHeight = $self.find(".list-item:first").height();
-        $self.animate({
-            "marginTop": -lineHeight + "px"
-        }, 600, function () {
-            $self.css({
-                marginTop: 0
-            }).find(".list-item:first").appendTo($self);
-        })
-    };
-    // function autoScroll(obj){
-    //     var lineHeight = $(obj).find(".list-item:first").height();  
-    //     $(obj).animate({  
-    //         marginTop : -lineHeight + "px"  
-    //     },1000,function(){  
-    //         $(this).find("ul").css({marginTop : "0px"}).find(".list-item:first").appendTo(this);  
-    //     })  
-    // }  
-
-    // var scroll=setInterval('autoScroll("#marquee")',1500);
-    //  $("#marquee").hover(function(){
-    //     console.log("aaa");
-    //     clearInterval(scroll);
-    //  },function(){
-    //     scroll=setInterval('autoScroll("#marquee")',1500);
-    //  });
+    var scroll=setInterval('autoScroll("#marquee")',1500);
+    $("#marquee").hover(function(){
+        clearInterval(scroll);
+    },function(){
+        scroll=setInterval('autoScroll("#marquee")',1500);
+    });
 };
-//滚动充电桩数字
-function ScrollNums(cdzNums){
-    var nums = toThousands(cdzNums);
-    var it = $(".cdz-sums").children();
-    var len = String(nums).length;
-    for(var i=0;i<len;i++){
-        var num=String(nums).charAt(i);
-        if(it.length<=i){
-            if(num !== ','){
-               $(".cdz-sums").append("<i class='sumsi_"+i+"'></i>");
-            }else{
-                $(".cdz-sums").append("<em class='dh'>，</em>"); 
-            }            
-        }
-        if(num !== ','){
-            var y = -parseInt(num)*90;
-            var obj = $(".sumsi_"+i);
-            obj.animate({
-                    backgroundPosition :'(0 '+String(y)+'px)' 
-                }, 1500,'swing',function(){}
-            );
-        }
-        // console.log(num)
-    }
-    localStorage.setItem('cdzNums',cdzNums);
-    //$("#cur_num").val(n);
+function autoScroll(obj){  
+    $(obj).find("ul").animate({  
+        marginTop : "-39px"  
+    },1000,function(){  
+        $(this).css({marginTop : "0px"}).find("li:first").appendTo(this);  
+    })  
+}
+function scrollNews(obj) {
+    var $self = $(obj);
+    var lineHeight = $self.find(".list-item:first").height();
+    $self.animate({
+        "marginTop": -lineHeight + "px"
+    }, 600, function () {
+        $self.css({
+            marginTop: 0
+        }).find(".list-item:first").appendTo($self);
+    })
 };
+// //滚动充电桩数字
+// function ScrollNums(cdzNums){
+//     var nums = toThousands(cdzNums);
+//     var it = $(".cdz-sums").children();
+//     var len = String(nums).length;
+//     for(var i=0;i<len;i++){
+//         var num=String(nums).charAt(i);
+//         if(it.length<=i){
+//             if(num !== ','){
+//                $(".cdz-sums").append("<i class='sumsi_"+i+"'></i>");
+//             }else{
+//                 $(".cdz-sums").append("<em class='dh'>，</em>"); 
+//             }            
+//         }
+//         if(num !== ','){
+//             var y = -parseInt(num)*90;
+//             var obj = $(".sumsi_"+i);
+//             obj.animate({
+//                     backgroundPosition :'(0 '+String(y)+'px)' 
+//                 }, 1500,'swing',function(){}
+//             );
+//         }
+//         // console.log(num)
+//     }
+//     localStorage.setItem('cdzNums',cdzNums);
+//     //$("#cur_num").val(n);
+// };
 //加载饼状图1数据
 function loadOption1(resData){
     myChart1.clear();
@@ -481,6 +474,7 @@ function loadOptionMap(mapJSON){
     mapJSON.forEach(function(item) {
         mapArr.push({
             name:item.name,
+            groupName:item.groupName,
             value:[parseFloat(item.latitude),parseFloat(item.longitude),parseFloat(item.value)]
         })
     });
@@ -495,7 +489,7 @@ function loadOptionMap(mapJSON){
         tooltip: {
             trigger: 'item',
             formatter: function (params) {
-                return params.name + ' : ' + params.value[2];
+                return  '片区名称：' + params.data.groupName + '<br/> 设备：' + params.name;
             }
         },
         geo: {
@@ -515,7 +509,7 @@ function loadOptionMap(mapJSON){
             layoutCenter: ['30%', '30%'],
             itemStyle: {
                 normal: {
-                    borderWidth: 1,
+                    borderWidth: 0,
                     // areaColor: new echarts.graphic.LinearGradient(
                     //     0, 0, 0, 1,
                     //     [
@@ -528,7 +522,7 @@ function loadOptionMap(mapJSON){
                     //     ]
                     // ),
                     areaColor: '#00467F',
-                    borderColor: '#0dc9d7'
+                    borderColor: '#fff'
                 },
                 emphasis: {
                     show: false,
@@ -551,7 +545,9 @@ function loadOptionMap(mapJSON){
                 type: 'scatter',
                 coordinateSystem: 'geo',
                 data: mapArr,
-                symbolSize:5,
+                symbolSize:4,
+                // symbol: 'image://./images/cdz_icon2.png', //气泡
+                // symbolSize: [12, 20],
                 // symbolSize: function(val) {
                 //     return val[2] / 8;
                 // },
@@ -561,7 +557,9 @@ function loadOptionMap(mapJSON){
                 hoverAnimation: false,
                 itemStyle: {
                     normal: {
-                        color: '#fff'
+                        color: '#fff',
+                        shadowBlur: 1,
+                        shadowColor: '#2bfaff'
                     }
                 },
                 // itemStyle: {
