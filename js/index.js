@@ -10,13 +10,13 @@ $(function () {
     var params = {};
     AjaxJSON.get(API_URL.getChargingAmount,params,function(res){
         var nums = res.data;
-        // var showNums = parseInt(localStorage.getItem('cdzNums')) || nums;
-        // ScrollNums(showNums);
+        var showNums = parseInt(localStorage.getItem('cdzNums')) || nums;
+        ScrollNums(showNums);
 
         // var scrollNum = setInterval(function () {
         //     showNums += randomData();
         //     ScrollNums(showNums);
-        // }, 3000);
+        // }, 60000);
     });
     AjaxJSON.get(API_URL.findLastLogs,params,function(res){
         var html = '';
@@ -43,13 +43,19 @@ $(function () {
     AjaxJSON.get(API_URL.chargingWay,params,function(res){
         loadOption4(res.data);
     });
-    //地图数据
-    AjaxJSON.get(API_URL.chargAddress,params,function(res){
-        var mapData = res.data;
-        localStorage.setItem('mapJSON',mapData);
-        // var mapJSON
-        loadOptionMap(res.data);
-    });
+    var mapStorage = JSON.parse(localStorage.getItem('mapJSON'));
+    if(mapStorage){
+        loadOptionMap(mapStorage);
+    }else{
+        //地图数据
+        AjaxJSON.get(API_URL.chargAddress,params,function(res){
+            var mapData = res.data;
+            localStorage.setItem('mapJSON',JSON.stringify(mapData));
+            // var mapJSON
+            loadOptionMap(res.data);
+        });
+    }
+
     
 });
 
@@ -66,65 +72,54 @@ function toThousands(num) {
 }
 //随机数
 function randomData() {  
-    return Math.round(Math.random()*10);  
+    return Math.round(Math.random()*2);  
 };
 //实时进度
 function startMarquee() {   
-    var $this = $("#marquee");
-    var scroll=setInterval('autoScroll("#marquee")',1000);
+    var scroll=setInterval('ScrollText()',1200);
     $("#marquee").hover(function(){
         clearInterval(scroll);
     },function(){
-        scroll=setInterval('autoScroll("#marquee")',1000);
+        scroll=setInterval('ScrollText()',1200);
     });
 };
-function autoScroll(obj){
-    var lineHeight = $(obj).find(".list-item:first").outerHeight();
-    console.log(lineHeight)  
-    $(obj).find("ul").animate({  
+//滚动文字
+function ScrollText(){
+    var $obj = $("#marquee");
+    var lineHeight = $obj.find(".list-item:first").outerHeight(); 
+    $obj.find("ul").animate({  
         marginTop : -lineHeight + "px"  
     },1000,function(){  
         $(this).css({marginTop : "0px"}).find("li:first").appendTo(this);  
     })  
 }
-function scrollNews(obj) {
-    var $self = $(obj);
-    var lineHeight = $self.find(".list-item:first").outerHeight();  
-    $self.animate({
-        "marginTop": -lineHeight + "px"
-    }, 600, function () {
-        $self.css({
-            marginTop: 0
-        }).find(".list-item:first").appendTo($self);
-    })
+//滚动充电桩数字
+function ScrollNums(cdzNums){
+    var nums = toThousands(cdzNums);
+    var it = $(".cdz-sums").children();
+    var len = String(nums).length;
+    for(var i=0;i<len;i++){
+        var num=String(nums).charAt(i);
+        if(it.length<=i){
+            if(num !== ','){
+               $(".cdz-sums").append("<i class='sumsi_"+i+"'></i>");
+            }else{
+                $(".cdz-sums").append("<em class='dh'>，</em>"); 
+            }            
+        }
+        if(num !== ','){
+            var y = -parseInt(num)*90;
+            var obj = $(".sumsi_"+i);
+            obj.animate({
+                    backgroundPosition :'(0 '+String(y)+'px)' 
+                }, 1500,'swing',function(){}
+            );
+        }
+        // console.log(num)
+    }
+    localStorage.setItem('cdzNums',cdzNums);
+    //$("#cur_num").val(n);
 };
-// //滚动充电桩数字
-// function ScrollNums(cdzNums){
-//     var nums = toThousands(cdzNums);
-//     var it = $(".cdz-sums").children();
-//     var len = String(nums).length;
-//     for(var i=0;i<len;i++){
-//         var num=String(nums).charAt(i);
-//         if(it.length<=i){
-//             if(num !== ','){
-//                $(".cdz-sums").append("<i class='sumsi_"+i+"'></i>");
-//             }else{
-//                 $(".cdz-sums").append("<em class='dh'>，</em>"); 
-//             }            
-//         }
-//         if(num !== ','){
-//             var y = -parseInt(num)*90;
-//             var obj = $(".sumsi_"+i);
-//             obj.animate({
-//                     backgroundPosition :'(0 '+String(y)+'px)' 
-//                 }, 1500,'swing',function(){}
-//             );
-//         }
-//         // console.log(num)
-//     }
-//     localStorage.setItem('cdzNums',cdzNums);
-//     //$("#cur_num").val(n);
-// };
 //加载饼状图1数据
 function loadOption1(resData){
     myChart1.clear();
@@ -471,15 +466,7 @@ function PercentPie(myChart,title,value){
 };
 //加载地图数据
 function loadOptionMap(mapJSON){
-    console.log(mapJSON.length)
-    var mapArr = [];
-    mapJSON.forEach(function(item) {
-        mapArr.push({
-            name:item.name,
-            groupName:item.groupName,
-            value:[parseFloat(item.latitude),parseFloat(item.longitude),parseFloat(item.value)]
-        })
-    });
+
     // http://echarts.baidu.com/option.html#series-map.geoIndex
     // http://gallery.echartsjs.com/editor.html?c=xrJU-aE-LG
     var mapName = 'china';
@@ -491,12 +478,13 @@ function loadOptionMap(mapJSON){
         tooltip: {
             trigger: 'item',
             formatter: function (params) {
-                return  '片区名称：' + params.data.groupName + '<br/> 设备：' + params.name;
+                return  '片区：' + params.data.groupName + '<br/> 设备：' + params.name;
             }
         },
         geo: {
             show: true,
             map: mapName,
+            aspectScale: 0.75,
             label: {
                 normal: {
                     show: false
@@ -510,21 +498,29 @@ function loadOptionMap(mapJSON){
             silent:true,
             layoutCenter: ['30%', '30%'],
             itemStyle: {
+                // normal: {
+                //     borderWidth: 1,
+                //     // areaColor: new echarts.graphic.LinearGradient(
+                //     //     0, 0, 0, 1,
+                //     //     [
+                //     //         {offset: 0, color: '#0a4f88'},
+                //     //         {offset: 0.2, color: '#123290'},
+                //     //         {offset: 0.4, color: '#0a3b8c'},
+                //     //         {offset: 0.6, color: '#1164e9'},
+                //     //         {offset: 0.8, color: '#1164e9'},
+                //     //         {offset: 1, color: '#1164e9'}
+                //     //     ]
+                //     // ),
+                //     areaColor: '#00467F',
+                //     opacity:0.8,
+                //     borderColor: '#2bfaff'
+                // },
                 normal: {
+                    areaColor: 'none',
                     borderWidth: 0,
-                    // areaColor: new echarts.graphic.LinearGradient(
-                    //     0, 0, 0, 1,
-                    //     [
-                    //         {offset: 0, color: '#0a4f88'},
-                    //         {offset: 0.2, color: '#123290'},
-                    //         {offset: 0.4, color: '#0a3b8c'},
-                    //         {offset: 0.6, color: '#1164e9'},
-                    //         {offset: 0.8, color: '#1164e9'},
-                    //         {offset: 1, color: '#1164e9'}
-                    //     ]
-                    // ),
-                    areaColor: '#00467F',
-                    borderColor: '#fff'
+                    borderColor:'#0cb7cc',
+                    shadowColor: 'rgba(0,255,252, 1)',
+                    shadowBlur: 10
                 },
                 emphasis: {
                     show: false,
@@ -532,175 +528,85 @@ function loadOptionMap(mapJSON){
                 }
             }
         },
-        series: [
-            {
-                type: 'map',
-                map: mapName,
-                hoverable : true,
-                geoIndex: 0,
-                // aspectScale: 0.75, //长宽比
-                // showLegendSymbol: false, // 存在legend时显示
-                // data: convertData(data)
-            },
-            {
-                name: '白点',
-                type: 'scatter',
-                coordinateSystem: 'geo',
-                data: mapArr,
-                symbolSize:4,
-                // symbol: 'image://./images/cdz_icon2.png', //气泡
-                // symbolSize: [12, 20],
-                // symbolSize: function(val) {
-                //     return val[2] / 8;
-                // },
-                rippleEffect: {
-                    brushType: 'stroke'
-                },
-                hoverAnimation: false,
-                itemStyle: {
-                    normal: {
-                        color: '#fff',
-                        shadowBlur: 1,
-                        shadowColor: '#2bfaff'
-                    }
-                },
-                // itemStyle: {
-                //     normal: {
-                //         shadowBlur: 10,
-                //         shadowColor: 'rgba(255, 255, 255, 0.5)',
-                //         shadowOffsetY: 5,
-                //         color: new echarts.graphic.RadialGradient(0.4, 0.3, 1, [{
-                //             offset: 0,
-                //             color: 'rgb(255, 255, 200)'
-                //         }, {
-                //             offset: 1,
-                //             color: 'rgb(255, 255, 255)'
-                //         }])
-                //     }
-                // }
-            },
-            // {
-            //     name: '黄点',
-            //     type: 'effectScatter',
-            //     coordinateSystem: 'geo',
-            //     data: mapArr.sort(function(a, b) {
-            //         return b.value - a.value;
-            //     }).slice(0, 50),
-            //     symbolSize: function(val) {
-            //         return val[2] / 20;
-            //     },
-            //     rippleEffect: {
-            //         brushType: 'stroke'
-            //     },
-            //     hoverAnimation: true,
-            //     label: {
-            //         normal: {
-            //             formatter: '{b}',
-            //             position: 'right',
-            //             show: false
-            //         }
-            //     },
-            //     itemStyle: {
-            //         normal: {
-            //             color: 'yellow',
-            //             shadowBlur: 50,
-            //             shadowColor: 'yellow'
-            //         }
-            //     },
-            //     zlevel: 1
-            // },
-            // {
-            //     name: '气泡',
-            //     type: 'scatter',
-            //     coordinateSystem: 'geo',
-            //     // symbol: 'image://./images/cdz_icon2.png', //气泡
-            //     // symbolSize: [12, 20],
-            //     symbol:'pin',
-            //     symbolSize: function(val) {
-            //         var a = (maxSize4Pin - minSize4Pin) / (max - min);
-            //         var b = minSize4Pin - a * min;
-            //         b = maxSize4Pin - a * max;
-            //         return a * val[2] + b;
-            //     },
-            //     symbolKeepAspect: false,
-            //     hoverAnimation: false,
-            //     // symbolOffset:[0, '-100%'], 
-            //     label: {
-            //         // position: "insideTop",
-            //         normal: {
-            //             show: false
-            //         }
-            //     },
-            //     itemStyle: {
-            //         normal: {
-            //             color: '#F62157', //标志颜色
-            //         }
-            //     },
-            //     zlevel: 6,
-            //     data: mapArr,
-            // },
-            // {
-            //     name: "图标",
-            //     type: 'custom',//配置显示方式为用户自定义
-            //     zlevel: 6,
-            //     coordinateSystem: 'geo',
-            //     itemStyle: {
-            //         normal: {
-            //             color: '#46bee9'
-            //         }
-            //     },
-            //     renderItem: function (params, api) {//具体实现自定义图标的方法
-            //         return {
-            //             type: 'image',
-            //             style: {
-            //                 image: "image://./images/cdz_icon.png",
-            //                 x: api.coord([
-            //                     convertData(data)[params.dataIndex].value[0], convertData(data)[params.dataIndex]
-            //                         .value[1]
-            //                 ])[0],
-            //                 y: api.coord([
-            //                     convertData(data)[params.dataIndex].value[0], convertData(data)[params.dataIndex]
-            //                         .value[1]
-            //                 ])[1]
-            //             }
-            //         }
-            //     },
-            //     data: mapArr.sort(function(a, b) {
-            //         return b.value - a.value;
-            //     }).slice(0, 5)
-            // },
-            // {
-            //     name: '红点',
-            //     type: 'effectScatter',
-            //     coordinateSystem: 'geo',
-            //     data: convertData(data.sort(function(a, b) {
-            //         return b.value - a.value;
-            //     }).slice(5, 10)),
-            //     symbolSize: function(val) {
-            //         return val[2] / 10;
-            //     },
-            //     showEffectOn: 'render',
-            //     rippleEffect: {
-            //         brushType: 'stroke'
-            //     },
-            //     hoverAnimation: true,
-            //     label: {
-            //         normal: {
-            //             formatter: '{b}',
-            //             position: 'right',
-            //             show: false
-            //         }
-            //     },
-            //     itemStyle: {
-            //         normal: {
-            //             color: 'red',
-            //             shadowBlur: 10,
-            //             shadowColor: 'red'
-            //         }
-            //     },
-            //     zlevel: 1
-            // }
-        ]
+        series: getSeries(mapJSON)
     };
+    // console.log(getSeries(mapJSON));
     myChartMap.setOption(option);
 };
+function getSeries(mapJSON){
+    console.log(mapJSON.length)
+    var mapArr = [];
+    var mapName = 'china';
+    var seriesPointData = [];
+    var seriesData = [{
+        type: 'map',
+        map: 'china',
+        geoIndex: 0,
+        showLegendSymbol: false, // 存在legend时显示
+        label: {
+            normal: {
+                show: false,
+            },
+            emphasis: {
+                show: false,
+                textStyle: {
+                    color: '#fff'
+                }
+            }
+        },
+        roam: false,
+        itemStyle: {
+            normal: {
+                areaColor: '#006fff',
+                borderColor: '#0145a4',
+                borderWidth: 0
+            },
+            emphasis: {
+                areaColor: '#006fff'
+            }
+        },
+    }];
+    mapJSON.forEach(function(item,index) {
+        var seriesPoint = {
+            name:item.name,
+            groupName:item.groupName,
+            value:[parseFloat(item.latitude),parseFloat(item.longitude),parseFloat(item.value)]
+        };
+        if(seriesPointData[index % 10] == undefined){
+            seriesPointData[index % 10] = [];
+        }
+        seriesPointData[index % 10].push(seriesPoint);
+    });
+    var colorList = ['#fff','#fff','yellow','blue','green', '#fff','#fff','red','yellow','#fff','yellow','#fff','#BA4A00','#ECF0F1','#616A6B','#EAF2F8','#4A235A','#3498DB' ];
+
+    seriesPointData.forEach(function(item,index){
+        var typeList = 'scatter';
+        if(index==1){
+            //typeList = 'effectScatter'; 
+        }
+        seriesData.push({
+            name: '小点',
+            type: typeList,
+            coordinateSystem: 'geo',
+            data: item,
+            symbolSize:index/2,
+            // symbol: 'image://./images/cdz_icon2.png', //气泡
+            // symbolSize: [12, 20],
+            // symbolSize: function(val) {
+            //     return val[2] / 8;
+            // },
+            rippleEffect: {
+                brushType: 'stroke'
+            },
+            hoverAnimation: false,
+            itemStyle: {
+                normal: {
+                    color: colorList[index],
+                    shadowBlur: 1,
+                    shadowColor: '#2bfaff'
+                }
+            }
+        });
+    });
+    return seriesData;
+}
