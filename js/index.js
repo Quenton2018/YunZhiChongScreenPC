@@ -71,23 +71,25 @@ function randomData() {
 //实时进度
 function startMarquee() {   
     var $this = $("#marquee");
-    var scroll=setInterval('autoScroll("#marquee")',1500);
+    var scroll=setInterval('autoScroll("#marquee")',1000);
     $("#marquee").hover(function(){
         clearInterval(scroll);
     },function(){
-        scroll=setInterval('autoScroll("#marquee")',1500);
+        scroll=setInterval('autoScroll("#marquee")',1000);
     });
 };
-function autoScroll(obj){  
+function autoScroll(obj){
+    var lineHeight = $(obj).find(".list-item:first").outerHeight();
+    console.log(lineHeight)  
     $(obj).find("ul").animate({  
-        marginTop : "-39px"  
+        marginTop : -lineHeight + "px"  
     },1000,function(){  
         $(this).css({marginTop : "0px"}).find("li:first").appendTo(this);  
     })  
 }
 function scrollNews(obj) {
     var $self = $(obj);
-    var lineHeight = $self.find(".list-item:first").height();
+    var lineHeight = $self.find(".list-item:first").outerHeight();  
     $self.animate({
         "marginTop": -lineHeight + "px"
     }, 600, function () {
