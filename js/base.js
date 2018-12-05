@@ -1,4 +1,5 @@
-// var apiHost = 'http://192.168.1.156:8081';
+
+var apiHost = 'http://192.168.1.106:8081';
 var apiHost = 'http://39.106.62.16:8081';
 
 
