@@ -179,8 +179,8 @@ function loadOption2(resData){
         return item.value;
     });
     var yAxisData = data.map(function(item){
-    	if (item.name.length > 7) {
-	      return item.name.substring(0, 7) + "...";
+    	if (item.name.length > 8) {
+	      return item.name.substring(0, 8) + "...";
 	    } else {
 	      return item.name;
 	    }
@@ -220,8 +220,8 @@ function loadOption2(resData){
         },
         grid: {
             show : false,
-            left: 20,
-            right:85,
+            left: 15,
+            right:95,
             bottom: 30,
             top: '20%',
             containLabel: true
@@ -245,7 +245,7 @@ function loadOption2(resData){
                     color:'#fff'
                 }
             },
-            offset:90,
+            offset:110,
             data: yAxisData,
         },
         series: [
