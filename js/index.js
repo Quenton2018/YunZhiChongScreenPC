@@ -183,7 +183,7 @@ function loadOption2(resData){
         return item.taishu;
     });
     var ratioData = data.map(function(item){
-        return item.value;
+        return parseInt(item.value);
     });
     var yAxisData = data.map(function(item){
         if (item.name && item.name.length > 8) {
@@ -192,6 +192,11 @@ function loadOption2(resData){
           return item.name;
         }
     });
+    data.forEach(function(item){
+        if(item.value>100){
+            item.value = 100;
+        }
+    })
     var xMax = 100;
     var dataShadow = [];
 
@@ -265,7 +270,7 @@ function loadOption2(resData){
                     normal: {
                         formatter: function(data) {
                             var result = "";
-                                result += xAxisData[data.dataIndex] + "     " + ratioData[data.dataIndex]+'%';
+                                result += xAxisData[data.dataIndex] + "       " + ratioData[data.dataIndex]+'%';
                             return result;
                         },
                         show: true,
@@ -502,23 +507,6 @@ function loadOptionMap(mapJSON){
             silent:true,
             layoutCenter: ['30%', '30%'],
             itemStyle: {
-                // normal: {
-                //     borderWidth: 1,
-                //     // areaColor: new echarts.graphic.LinearGradient(
-                //     //     0, 0, 0, 1,
-                //     //     [
-                //     //         {offset: 0, color: '#0a4f88'},
-                //     //         {offset: 0.2, color: '#123290'},
-                //     //         {offset: 0.4, color: '#0a3b8c'},
-                //     //         {offset: 0.6, color: '#1164e9'},
-                //     //         {offset: 0.8, color: '#1164e9'},
-                //     //         {offset: 1, color: '#1164e9'}
-                //     //     ]
-                //     // ),
-                //     areaColor: '#00467F',
-                //     opacity:0.8,
-                //     borderColor: '#2bfaff'
-                // },
                 normal: {
                     areaColor: 'rgba(20,247,250,0.1)',
                     borderWidth: 0.1,
@@ -534,7 +522,6 @@ function loadOptionMap(mapJSON){
         },
         series: getSeries(mapJSON)
     };
-    // console.log(getSeries(mapJSON));
     myChartMap.setOption(option);
 };
 function getSeries(mapJSON){
@@ -549,25 +536,33 @@ function getSeries(mapJSON){
         showLegendSymbol: false, // 存在legend时显示
         roam: false
     }];
+    
+    var len = 10;
+    seriesPointData[len] = [];
     mapJSON.point.forEach(function(item,index) {
         var itemArr = item.split(",");
-    if (parseInt(itemArr[2]) == 10) {
-        return true;
-    }
+        if (parseInt(itemArr[2]) == 10) {
+            return true;
+        }
         var seriesPoint = {
             name:itemArr[3],
             groupName:mapJSON.group[itemArr[4]],
             value:[parseFloat(itemArr[0]),parseFloat(itemArr[1]),parseFloat(itemArr[2])]
         };
-        if(seriesPointData[index % 10] == undefined){
-            seriesPointData[index % 10] = [];
+        if (index < 20) {
+            seriesPointData[len].push(seriesPoint);
+            return true;
         }
-        seriesPointData[index % 10].push(seriesPoint);
+        if(seriesPointData[index % len] == undefined){
+            seriesPointData[index % len] = [];
+        }
+        seriesPointData[index % len].push(seriesPoint);
     });
     var colorList = ['#fff','#fff','#00fffc','#00fffc','#00fffc', '#00fffc','#6cefb0','#fff','yellow','#fff','yellow'];
 
     seriesPointData.forEach(function(item,index){
-        var typeList = 'scatter';
+        var typeList = index == len ? 'effectScatter' : 'scatter';
+        var size = index == len ? 10 : 5;
         seriesData.push({
             name: '小点',
             type: typeList,
@@ -583,8 +578,8 @@ function getSeries(mapJSON){
                 // return val[2] / 5;
                 if(val[2] == 10){
                     return 1;
-                }else if(val[2] > 50){
-                    return 5;
+                }else if(val[2] >= 50){
+                    return size;
                 }else{
                     return 2;
                 }
