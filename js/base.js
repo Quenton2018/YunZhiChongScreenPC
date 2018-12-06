@@ -1,6 +1,6 @@
 
 var apiHost = 'http://192.168.1.106:8081';
-var apiHost = 'http://39.106.62.16:8081';
+//var apiHost = 'http://39.106.62.16:8081';
 
 
 var API_URL = {};
@@ -21,7 +21,19 @@ API_URL.chargingWay = apiHost + "/largeScreen/chargingWay"; //充电方式统计
 
 API_URL.chringAmount = apiHost + "/api/chart/getChargingAmount";
 
-API_URL.chringPlace = apiHost + "/largeScreen/charging/chringPlace";
+API_URL.chringPlace = apiHost + "/largeScreen/charging/chringPlace"; //寻找充电桩位置方式
+
+API_URL.getAllNum = apiHost + "/api/count/getAllNum";//各区域充电桩数量统计
+
+API_URL.ChargingProblem = apiHost + "/api/user/userChargingProblem";//用户常问充电桩问题统计
+
+API_URL.ChargingCdz = apiHost + "/api/count/getChargingCdz";//充电桩数量总数
+
+
+
+
+
+
 
 
 
