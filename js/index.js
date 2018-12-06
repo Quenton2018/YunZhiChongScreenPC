@@ -551,6 +551,9 @@ function getSeries(mapJSON){
     }];
     mapJSON.point.forEach(function(item,index) {
         var itemArr = item.split(",");
+    if (parseInt(itemArr[2]) == 10) {
+        return true;
+    }
         var seriesPoint = {
             name:itemArr[3],
             groupName:mapJSON.group[itemArr[4]],
