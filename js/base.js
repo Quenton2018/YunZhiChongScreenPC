@@ -1,7 +1,6 @@
-
-var apiHost = 'http://39.106.62.16:8081';
+// var apiHost = 'http://39.106.62.16:8081';
 var apiHost = 'http://47.98.233.143:8085';
-var apiHost = 'http://192.168.1.156:8081';
+// var apiHost = 'http://192.168.1.156:8081';
 
 
 var API_URL = {};

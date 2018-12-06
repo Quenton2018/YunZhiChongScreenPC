@@ -183,7 +183,7 @@ function loadOption2(resData){
         return item.value;
     });
     var yAxisData = data.map(function(item){
-        if (item.name.length > 8) {
+        if (item.name && item.name.length > 8) {
           return item.name.substring(0, 8) + "...";
         } else {
           return item.name;
