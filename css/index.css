@@ -56,3 +56,13 @@
     .cdfs-box{height:5.11rem;}
     .cdz-sums i{width:55px;height:90px;}
 }
+@media only screen and (min-height:969px){
+    .wrap{
+        padding-top: 1rem;
+    }
+}
+@media only screen and (min-height:1080px){
+    .wrap{
+        padding-top: 2rem;
+    }
+}

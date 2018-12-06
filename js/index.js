@@ -6,11 +6,15 @@ var myChart5 = echarts.init(document.getElementById('Echarts5'));
 var myChart6 = echarts.init(document.getElementById('Echarts6'));
 var myChartMap = echarts.init(document.getElementById('Echartsmap'));
 $(function () {
-    
     var params = {};
     AjaxJSON.get(API_URL.getChargingAmount,params,function(res){
-        var nums = res.data;
-        var showNums = parseInt(localStorage.getItem('cdzNums')) || nums;
+        // console.log(res)
+        var showNums = res.data;
+    if (showNums) {
+        // showNums = showNums * 11 * 12;
+    } else {
+        showNums = parseInt(localStorage.getItem('cdzNums'));
+    }
         ScrollNums(showNums);
 
         // var scrollNum = setInterval(function () {
@@ -179,11 +183,11 @@ function loadOption2(resData){
         return item.value;
     });
     var yAxisData = data.map(function(item){
-    	if (item.name.length > 8) {
-	      return item.name.substring(0, 8) + "...";
-	    } else {
-	      return item.name;
-	    }
+        if (item.name.length > 8) {
+          return item.name.substring(0, 8) + "...";
+        } else {
+          return item.name;
+        }
     });
     var xMax = 100;
     var dataShadow = [];
@@ -540,28 +544,7 @@ function getSeries(mapJSON){
         map: 'china',
         geoIndex: 0,
         showLegendSymbol: false, // 存在legend时显示
-        label: {
-            normal: {
-                show: false,
-            },
-            emphasis: {
-                show: false,
-                textStyle: {
-                    color: '#fff'
-                }
-            }
-        },
-        roam: false,
-        itemStyle: {
-            normal: {
-                areaColor: '#006fff',
-                borderColor: '#0145a4',
-                borderWidth: 0.1
-            },
-            emphasis: {
-                areaColor: '#006fff'
-            }
-        },
+        roam: false
     }];
     mapJSON.forEach(function(item,index) {
         var seriesPoint = {
@@ -581,6 +564,8 @@ function getSeries(mapJSON){
         seriesData.push({
             name: '小点',
             type: typeList,
+            large:true,
+            largeThreshold: 5000,
             coordinateSystem: 'geo',
             data: item,
             // symbolSize:3,
@@ -604,7 +589,7 @@ function getSeries(mapJSON){
             itemStyle: {
                 normal: {
                     color: colorList[index],
-                    shadowBlur: 1,
+                    shadowBlur: 2,
                     shadowColor: '#2bfaff'
                 }
             }

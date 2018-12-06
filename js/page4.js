@@ -2,10 +2,16 @@
 var myChart1 = echarts.init(document.getElementById('Echarts1'));
 
 $(function () {
-    //数字动画  
-    $('.counter').countUp({
-        delay: 10,
-        time: 800
+    var params = {};
+    //获取代理商地区分布
+    AjaxJSON.get(API_URL.getTotalPower,params,function(res){
+        $("#useTotal").text(res.data.useTotal);
+        $("#totalPower").text(res.data.totalPower);
+        //数字动画  
+        $('.counter').countUp({
+            delay: 10,
+            time: 800
+        });
     });
     loadCharts1();
 });
