@@ -47,18 +47,21 @@ $(function () {
     AjaxJSON.get(API_URL.chargingWay,params,function(res){
         loadOption4(res.data);
     });
-    var mapStorage = JSON.parse(localStorage.getItem('mapJSON'));
-    if(mapStorage){
-        loadOptionMap(mapStorage);
-    }else{
-        //地图数据
+    // var mapStorage = JSON.parse(localStorage.getItem('mapJSON'));
+    // if(mapStorage){
+    //     loadOptionMap(mapStorage);
+    // }else{
+    //     //地图数据
         AjaxJSON.get(API_URL.chargAddress,params,function(res){
-            var mapData = res.data;
-            localStorage.setItem('mapJSON',JSON.stringify(mapData));
-            // var mapJSON
-            loadOptionMap(res.data);
+            if(res.data){
+                var mapData = res.data;
+                // localStorage.setItem('mapJSON',JSON.stringify(mapData));
+                // var mapJSON
+                loadOptionMap(res.data);
+            }
         });
-    }
+    // }
+    // loadOptionMap(mapData.data);
 
     
 });
@@ -546,11 +549,12 @@ function getSeries(mapJSON){
         showLegendSymbol: false, // 存在legend时显示
         roam: false
     }];
-    mapJSON.forEach(function(item,index) {
+    mapJSON.point.forEach(function(item,index) {
+        var itemArr = item.split(",");
         var seriesPoint = {
-            name:item.name,
-            groupName:item.groupName,
-            value:[parseFloat(item.latitude),parseFloat(item.longitude),parseFloat(item.value)]
+            name:itemArr[3],
+            groupName:mapJSON.group[itemArr[4]],
+            value:[parseFloat(itemArr[0]),parseFloat(itemArr[1]),parseFloat(itemArr[2])]
         };
         if(seriesPointData[index % 10] == undefined){
             seriesPointData[index % 10] = [];
