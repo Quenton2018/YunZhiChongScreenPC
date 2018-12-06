@@ -1,6 +1,6 @@
 // var apiHost = 'http://39.106.62.16:8081';
 var apiHost = 'http://47.98.233.143:8085';
-// var apiHost = 'http://192.168.1.156:8081';
+// var apiHost = 'http://192.168.1.106:8081';
 
 
 var API_URL = {};
@@ -24,6 +24,8 @@ API_URL.chringAmount = apiHost + "/api/chart/getChargingAmount";
 API_URL.chringPlace = apiHost + "/largeScreen/charging/chringPlace";
 
 API_URL.getTotalPower = apiHost + "/api/count/getTotalPower";
+
+API_URL.getDailyStatistics = apiHost + "/api/count/getDailyStatistics";   //获取每日充电数据
 
 
 

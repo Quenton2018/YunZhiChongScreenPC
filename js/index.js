@@ -31,14 +31,36 @@ $(function () {
         startMarquee();      
     });
     
+    var scrollNumber = setInterval(function () {
+        ajaxStatistics();
+    }, 15000);
+    ajaxStatistics();
+    function ajaxStatistics(){
+        AjaxJSON.get(API_URL.getDailyStatistics,params,function(res){
+            if(res.data){
+                $("#userNumber").text(res.data.userNumber);
+                $("#chargeTimes").text(res.data.chargeTimes);
+                $("#chargeAmount").text(parseFloat(res.data.chargeAmount).toFixed(2));
+                $("#chargeElectric").text(parseFloat(res.data.chargeElectric).toFixed(2));
+                $("#dayOnLineCharing").text(parseInt(res.data.dayOnLineCharing));
+            }      
+        });
+    }
+    var scrollRank = setInterval(function () {
+        ajaxUseRank();
+    }, 1000);
+    
     //获取代理商地区分布
     AjaxJSON.get(API_URL.address,params,function(res){
         loadOption1(res.data);
     });
-    //充电桩使用排名
-    AjaxJSON.get(API_URL.chringAddressUseRank,params,function(res){
-        loadOption2(res.data);
-    });
+    function ajaxUseRank(){
+        //充电桩使用排名
+        AjaxJSON.get(API_URL.chringAddressUseRank,params,function(res){
+            loadOption2(res.data);
+        });
+    }
+
     //安装点充电桩使用率
     AjaxJSON.get(API_URL.chringUseRank,params,function(res){
         loadOption3(res.data);
@@ -94,7 +116,7 @@ function startMarquee() {
 function ScrollText(){
     var $obj = $("#marquee");
     var lineHeight = $obj.find(".list-item:first").outerHeight(); 
-    $obj.find("ul").animate({  
+    $obj.find("ul").stop().animate({  
         marginTop : -lineHeight + "px"  
     },1000,function(){  
         $(this).css({marginTop : "0px"}).find("li:first").appendTo(this);  
@@ -117,10 +139,13 @@ function ScrollNums(cdzNums){
         if(num !== ','){
             var y = -parseInt(num)*90;
             var obj = $(".sumsi_"+i);
-            obj.animate({
-                    backgroundPosition :'(0 '+String(y)+'px)' 
-                }, 1500,'swing',function(){}
-            );
+            // obj.stop().animate({
+            //         backgroundPosition :'(0 '+String(y)+'px)' 
+            //     }, 1400,'swing',function(){}
+            // );
+            obj.css({
+                'backgroundPosition' :'0 '+String(y)+'px' 
+            });                    
         }
         // console.log(num)
     }
@@ -145,7 +170,7 @@ function loadOption1(resData){
             trigger: 'item',
             formatter: "{a} <br/>{b} : {c} ({d}%)"
         },
-        color:['#8378ea','#2397f0','#32c5e9','#14d1b0','#ff8562','#fb7293','#e7bcf3','#ffc637','#e7bcf3','#ffc637'],
+        color:['#8378ea','#2397f0','#32c5e9','#14d1b0','#ff8562','#fb7293','#e7bcf3','#ffc637','#3498DB','#00fffc'],
         calculable : false,
         series : [
             {
@@ -307,7 +332,7 @@ function loadOption2(resData){
                         // 定制显示（按顺序）
                         color: function(params) { 
                             var colorList = ['#ef6c77','#a7fa91','#34baff','#ff903f','#f482fe', '#fe846c','#6cefb0',
-                                             '#E89589','#16A085','#4A235A','#C39BD3 ','#F9E79F','#BA4A00','#ECF0F1',
+                                             '#E89589','#16A085','#00fffc','#C39BD3 ','#F9E79F','#BA4A00','#ECF0F1',
                                              '#616A6B','#EAF2F8','#4A235A','#3498DB' ]; 
                             return colorList[params.dataIndex] 
                         }
@@ -427,7 +452,7 @@ function PercentPie(myChart,title,value){
             x:'center',
             textStyle:{
                 color: '#fff',
-                fontSize: 14,
+                fontSize: 12,
             }
         },
         tooltip : {
@@ -525,7 +550,6 @@ function loadOptionMap(mapJSON){
     myChartMap.setOption(option);
 };
 function getSeries(mapJSON){
-    console.log(mapJSON.length)
     var mapArr = [];
     var mapName = 'china';
     var seriesPointData = [];
