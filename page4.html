@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="css/common.css">
     <link rel="stylesheet" type="text/css" href="css/page4.css">
     <script type="text/javascript" src="js/jquery-1.8.1.min.js"></script>
+    <script type="text/javascript" src="js/base.js"></script>
     <script type="text/javascript" src="js/jquery.countup.min.js"></script>   
     <script type="text/javascript" src="js/echarts4.min.js"></script>
     <script type="text/javascript">
@@ -30,15 +31,15 @@
         <div class="wrap flex">
             <div class="wrap-left">
                 <div class="wrap-area">
-                    <!-- 区域总充电量 -->
+                    <!-- 总充电次数 -->
                     <div class="area-zdl area-bg bgsize">
-                        <p class="area-text">区域总充电量</p>
-                        <p class="area-num"><span class="counter iconfont">55663</span><em>w</em></p>
+                        <p class="area-text">总充电次数</p>
+                        <p class="area-num"><span class="counter iconfont" id="useTotal"></span><em>次</em></p>
                     </div>
-                    <!-- 区域总收入 -->
+                    <!-- 总消费电量 -->
                     <div class="area-zsr area-bg bgsize">
-                        <p class="area-text">区域总收入</p>
-                        <p class="area-num"><span class="counter iconfont">654321</span><em class="yuan">元</em></p>
+                        <p class="area-text">总消费电量</p>
+                        <p class="area-num"><span class="counter iconfont" id="totalPower"></span><em class="yuan">度</em></p>
                     </div>
                 </div>   
                 <div class="wrap-cdz bgsize">
@@ -49,72 +50,14 @@
                 <div class="wrap-dlpm bgsize">
                     <div class="flex-table">
                         <div class="flex-header">
-                           <span>排名</span>
-                           <span>实时充电量</span>
-                           <span>场地名称</span>
-                           <span>代理商</span>
+                           <span style="width:10%;">排名</span>
+                           <span style="width:30%;">实时充电量</span>
+                           <span style="width:30%;">场地名称</span>
+                           <span style="width:30%;">代理商</span>
                         </div>
-                        <div class="flex-tbody">
-                           <div class="list-item">
-                                <span class="mz"><i class="jt_icon up"></i>1</span>
-                                <span><em class="counter iconfont">345673.6</em><sub>度</sub></span>
-                                <span class="area-name">江西鹿璟名居小区</span>
-                                <span class="area-dls">1887563326</span>
-                           </div>
-                           <div class="list-item">
-                                <span class="mz"><i class="jt_icon up"></i>2</span>
-                                <span><em class="counter iconfont">345673.6</em><sub>度</sub></span>
-                                <span class="area-name">江西鹿璟名居小区</span>
-                                <span class="area-dls">1887563326</span>
-                           </div>
-                           <div class="list-item">
-                                <span class="mz"><i class="jt_icon up"></i>3</span>
-                                <span><em class="counter iconfont">345673.6</em><sub>度</sub></span>
-                                <span class="area-name">江西鹿璟名居小区</span>
-                                <span class="area-dls">1887563326</span>
-                           </div>
-                           <div class="list-item">
-                                <span class="mz"><i class="jt_icon up"></i>4</span>
-                                <span><em class="counter iconfont">345673.6</em><sub>度</sub></span>
-                                <span class="area-name">江西鹿璟名居小区</span>
-                                <span class="area-dls">1887563326</span>
-                           </div>
-                           <div class="list-item">
-                                <span class="mz"><i class="jt_icon up"></i>5</span>
-                                <span><em class="counter iconfont">345673.6</em><sub>度</sub></span>
-                                <span class="area-name">江西鹿璟名居小区</span>
-                                <span class="area-dls">1887563326</span>
-                           </div>
-                           <div class="list-item">
-                                <span class="mz"><i class="jt_icon up"></i>6</span>
-                                <span><em class="counter iconfont">345673.6</em><sub>度</sub></span>
-                                <span class="area-name">江西鹿璟名居小区</span>
-                                <span class="area-dls">1887563326</span>
-                           </div>
-                           <div class="list-item">
-                                <span class="mz"><i class="jt_icon up"></i>7</span>
-                                <span><em class="counter iconfont">345673.6</em><sub>度</sub></span>
-                                <span class="area-name">江西鹿璟名居小区</span>
-                                <span class="area-dls">1887563326</span>
-                           </div>
-                           <div class="list-item">
-                                <span class="mz"><i class="jt_icon up"></i>8</span>
-                                <span><em class="counter iconfont">345673.6</em><sub>度</sub></span>
-                                <span class="area-name">江西鹿璟名居小区</span>
-                                <span class="area-dls">1887563326</span>
-                           </div>
-                           <div class="list-item">
-                                <span class="mz"><i class="jt_icon up"></i>9</span>
-                                <span><em class="counter iconfont">345673.6</em><sub>度</sub></span>
-                                <span class="area-name">江西鹿璟名居小区</span>
-                                <span class="area-dls">1887563326</span>
-                           </div>
-                           <div class="list-item">
-                                <span class="mz"><i class="jt_icon down"></i>10</span>
-                                <span><em class="counter iconfont">345673.6</em><sub>度</sub></span>
-                                <span class="area-name">江西鹿璟名居小区</span>
-                                <span class="area-dls">1887563326</span>
-                           </div>
+                        <div class="flex-tbody" id="rankList">
+                           
+
                        </div>
                     </div>
                 </div>

@@ -1,6 +1,6 @@
-
-var apiHost = 'http://192.168.1.106:8081';
-//var apiHost = 'http://39.106.62.16:8081';
+// var apiHost = 'http://39.106.62.16:8081';
+var apiHost = 'http://47.98.233.143:8085';
+// var apiHost = 'http://192.168.1.156:8081';
 
 
 var API_URL = {};
@@ -35,7 +35,27 @@ API_URL.ChargingCdz = apiHost + "/api/count/getChargingCdz";//充电桩数量总
 
 
 
+API_URL.getTotalPower = apiHost + "/api/count/getTotalPower";
 
+API_URL.getDailyStatistics = apiHost + "/api/count/getDailyStatistics";   //获取每日充电数据
+
+API_URL.getCharingByELECar = apiHost + "/largeScreen/charging/getCharingByELECar";  //电动车与汽车保有量
+
+API_URL.groupByPower = apiHost + "/largeScreen/charging/groupByPower";    //各地区实时充电量排名情况
+
+API_URL.userCountByYear = apiHost + "/api/user/userCountByYear";    //获取用户活跃度
+
+API_URL.parnerMoneyCount = apiHost + "/api/user/parnerMoneyCount";   //代理商收益统计
+
+API_URL.parnerMoney = apiHost + "/api/user/orderByMoney/parnerMoney";   //代理商收益统计
+
+API_URL.getChargeDate = apiHost + "/api/count/getChargeDate"; //充电桩日平均数据
+
+API_URL.getAllNum = apiHost + "/api/count/getAllNum";//各区域充电桩数量统计
+
+API_URL.ChargingProblem = apiHost + "/api/user/userChargingProblem";//用户常问充电桩问题统计
+
+API_URL.ChargingCdz = apiHost + "/api/count/getChargingCdz";//充电桩数量总数
 
 
 

@@ -13,11 +13,11 @@
 		    AjaxJSON.get(API_URL.getAllNum,{},function(res){
 		    	loadOption4(res.data);
 		    });
-		    var load = setInterval(function(){
-		    	AjaxJSON.get(API_URL.getAllNum,{},function(res){
-			    	loadOption4(res.data);
-			    })
-		    },3000);
+		    // var load = setInterval(function(){
+		    // 	AjaxJSON.get(API_URL.getAllNum,{},function(res){
+			   //  	loadOption4(res.data);
+			   //  })
+		    // },3000);
 		    
 		    AjaxJSON.get(API_URL.ChargingCdz,{},function(res){
 //			    console.log(res.data)
@@ -27,16 +27,16 @@
 			AjaxJSON.get(API_URL.chringPlace,{},function(res){
 		    	loadOption2(res.data);
 //		    	console.log(res.data['上网查询'])
-		    });
-		    var find = setInterval(function(){
-		    	AjaxJSON.get(API_URL.chringPlace,{},function(res){
-			    	loadOption2(res.data);
-			    });
-		    },3000);
+		   });
+		    // var find = setInterval(function(){
+		    // 	AjaxJSON.get(API_URL.chringPlace,{},function(res){
+			   //  	loadOption2(res.data);
+			   //  });
+		    // },3000);
 		    
 		    AjaxJSON.get(API_URL.ChargingProblem,{},function(res){
 		    	loadOption5(res.data);
-		    	console.log(res.data)
+		    	// console.log(res.data)
 		    });
 			
 		});

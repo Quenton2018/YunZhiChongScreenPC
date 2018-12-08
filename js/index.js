@@ -5,12 +5,17 @@ var myChart4 = echarts.init(document.getElementById('Echarts4'));
 var myChart5 = echarts.init(document.getElementById('Echarts5'));
 var myChart6 = echarts.init(document.getElementById('Echarts6'));
 var myChartMap = echarts.init(document.getElementById('Echartsmap'));
+
 $(function () {
-    
     var params = {};
     AjaxJSON.get(API_URL.getChargingAmount,params,function(res){
-        var nums = res.data;
-        var showNums = parseInt(localStorage.getItem('cdzNums')) || nums;
+        // console.log(res)
+        var showNums = res.data;
+    if (showNums) {
+        // showNums = showNums * 11 * 12;
+    } else {
+        showNums = parseInt(localStorage.getItem('cdzNums'));
+    }
         ScrollNums(showNums);
 
         // var scrollNum = setInterval(function () {
@@ -21,20 +26,47 @@ $(function () {
     AjaxJSON.get(API_URL.findLastLogs,params,function(res){
         var html = '';
         $.each(res.data,function(k,v){
-            html +='<li class="list-item"><span>'+v.mobile+'</span><span>'+v.desc+'</span></li>';
+            var phone = plusXing(v.mobile);
+            html +='<li class="list-item"><span>'+phone+'</span><span>'+v.desc+'</span></li>';
         });
         $('.logList').html(html);
-        startMarquee();      
+        // startMarquee(); 
+        srcoll();    
     });
+    
+    var scrollNumber = setInterval(function () {
+        // ajaxStatistics();
+        // var userNumber = $("#userNumber").text() + Math.round(Math.random()*2)
+    }, 15000);
+
+    ajaxStatistics();
+    function ajaxStatistics(){
+        AjaxJSON.get(API_URL.getDailyStatistics,params,function(res){
+            if(res.data){
+                $("#userNumber").text(res.data.userNumber);
+                $("#chargeTimes").text(res.data.chargeTimes);
+                $("#chargeAmount").text(parseFloat(res.data.chargeAmount).toFixed(2));
+                $("#chargeElectric").text(parseFloat(res.data.chargeElectric).toFixed(2));
+                $("#dayOnLineCharing").text(parseInt(res.data.dayOnLineCharing));
+            }      
+        });
+    }
+    ajaxUseRank();
+    var scrollRank = setInterval(function () {
+        ajaxUseRank();
+    }, 900000);
     
     //获取代理商地区分布
     AjaxJSON.get(API_URL.address,params,function(res){
         loadOption1(res.data);
     });
-    //充电桩使用排名
-    AjaxJSON.get(API_URL.chringAddressUseRank,params,function(res){
-        loadOption2(res.data);
-    });
+    function ajaxUseRank(){
+        //充电桩使用排名
+        AjaxJSON.get(API_URL.chringAddressUseRank,params,function(res){
+            loadOption2(res.data);
+        });
+    }
+
     //安装点充电桩使用率
     AjaxJSON.get(API_URL.chringUseRank,params,function(res){
         loadOption3(res.data);
@@ -43,22 +75,28 @@ $(function () {
     AjaxJSON.get(API_URL.chargingWay,params,function(res){
         loadOption4(res.data);
     });
-    var mapStorage = JSON.parse(localStorage.getItem('mapJSON'));
-    if(mapStorage){
-        loadOptionMap(mapStorage);
-    }else{
-        //地图数据
+    // var mapStorage = JSON.parse(localStorage.getItem('mapJSON'));
+    // if(mapStorage){
+    //     loadOptionMap(mapStorage);
+    // }else{
+    //     //地图数据
         AjaxJSON.get(API_URL.chargAddress,params,function(res){
-            var mapData = res.data;
-            localStorage.setItem('mapJSON',JSON.stringify(mapData));
-            // var mapJSON
-            loadOptionMap(res.data);
+            if(res.data){
+                var mapData = res.data;
+                // localStorage.setItem('mapJSON',JSON.stringify(mapData));
+                // var mapJSON
+                loadOptionMap(res.data);
+            }
         });
-    }
+    // }
+    // loadOptionMap(mapData.data);
 
     
 });
-
+//手机号码脱敏
+function plusXing(phone) {
+    return phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
+}
 //数字千分位
 function toThousands(num) {
     var result = [ ], counter = 0;
@@ -87,11 +125,32 @@ function startMarquee() {
 function ScrollText(){
     var $obj = $("#marquee");
     var lineHeight = $obj.find(".list-item:first").outerHeight(); 
-    $obj.find("ul").animate({  
+    $obj.find("ul").stop().animate({  
         marginTop : -lineHeight + "px"  
     },1000,function(){  
         $(this).css({marginTop : "0px"}).find("li:first").appendTo(this);  
     })  
+}
+function srcoll(){
+    var _scroll = document.getElementById("marquee"),
+        _inner1 = document.getElementById("inner1"),
+        _inner2 = document.getElementById("inner2"),
+        speed = 300;
+    _inner2.innerHTML = _inner1.innerHTML;
+    function marquee(){
+        if(_inner1.offsetHeight<=_scroll.scrollTop){
+            _scroll.scrollTop = 0
+        }else{
+            _scroll.scrollTop += 10;
+        }
+    }
+    var interval = setInterval(marquee,speed);
+    _scroll.onmouseover = function(){
+        clearInterval(interval);
+    }
+    _scroll.onmouseout = function(){
+        interval = setInterval(marquee,speed);
+    }
 }
 //滚动充电桩数字
 function ScrollNums(cdzNums){
@@ -110,10 +169,13 @@ function ScrollNums(cdzNums){
         if(num !== ','){
             var y = -parseInt(num)*90;
             var obj = $(".sumsi_"+i);
-            obj.animate({
-                    backgroundPosition :'(0 '+String(y)+'px)' 
-                }, 1500,'swing',function(){}
-            );
+            // obj.stop().animate({
+            //         backgroundPosition :'(0 '+String(y)+'px)' 
+            //     }, 1400,'swing',function(){}
+            // );
+            obj.css({
+                'backgroundPosition' :'0 '+String(y)+'px' 
+            });                    
         }
         // console.log(num)
     }
@@ -138,13 +200,13 @@ function loadOption1(resData){
             trigger: 'item',
             formatter: "{a} <br/>{b} : {c} ({d}%)"
         },
-        color:['#8378ea','#2397f0','#32c5e9','#14d1b0','#ff8562','#fb7293','#e7bcf3','#ffc637','#e7bcf3','#ffc637'],
-        calculable : true,
+        color:['#8378ea','#2397f0','#32c5e9','#14d1b0','#ff8562','#fb7293','#e7bcf3','#ffc637','#3498DB','#00fffc'],
+        calculable : false,
         series : [
             {
-                name:'地区分布',
+                name:'代理商地区分布',
                 type:'pie',
-                radius: ['10%', '50%'],
+                radius: ['10%','55%'],
                 center : ['50%', '55%'],
                 roseType : 'area',
                 data: data
@@ -176,15 +238,20 @@ function loadOption2(resData){
         return item.taishu;
     });
     var ratioData = data.map(function(item){
-        return item.value;
+        return parseInt(item.value);
     });
     var yAxisData = data.map(function(item){
-    	if (item.name.length > 8) {
-	      return item.name.substring(0, 8) + "...";
-	    } else {
-	      return item.name;
-	    }
+        if (item.name && item.name.length > 9) {
+          return item.name.substring(0, 9) + "...";
+        } else {
+          return item.name;
+        }
     });
+    data.forEach(function(item){
+        if(item.value>100){
+            item.value = 100;
+        }
+    })
     var xMax = 100;
     var dataShadow = [];
 
@@ -199,17 +266,9 @@ function loadOption2(resData){
                 color:'#fff'
             }       
         },{
-            text: '台数',
-            top:'12%',
-            right:'18%',
-            textStyle:{
-                fontSize:12,
-                color:'#fcff00'
-            }       
-        },{
             text: '使用率',
-            top:'12%',
-            right:'3%',
+            top:'13%',
+            right:'2%',
             textStyle:{
                 fontSize:12,
                 color:'#fcff00'
@@ -220,10 +279,10 @@ function loadOption2(resData){
         },
         grid: {
             show : false,
-            left: 15,
-            right:95,
+            left: 0,
+            right:'18%',
             bottom: 30,
-            top: '20%',
+            top: '25%',
             containLabel: true
         },
         xAxis: {
@@ -258,7 +317,7 @@ function loadOption2(resData){
                     normal: {
                         formatter: function(data) {
                             var result = "";
-                                result += xAxisData[data.dataIndex] + "     " + ratioData[data.dataIndex]+'%';
+                                result += ratioData[data.dataIndex]+'%';
                             return result;
                         },
                         show: true,
@@ -295,7 +354,7 @@ function loadOption2(resData){
                         // 定制显示（按顺序）
                         color: function(params) { 
                             var colorList = ['#ef6c77','#a7fa91','#34baff','#ff903f','#f482fe', '#fe846c','#6cefb0',
-                                             '#E89589','#16A085','#4A235A','#C39BD3 ','#F9E79F','#BA4A00','#ECF0F1',
+                                             '#E89589','#16A085','#00fffc','#C39BD3 ','#F9E79F','#BA4A00','#ECF0F1',
                                              '#616A6B','#EAF2F8','#4A235A','#3498DB' ]; 
                             return colorList[params.dataIndex] 
                         }
@@ -415,7 +474,7 @@ function PercentPie(myChart,title,value){
             x:'center',
             textStyle:{
                 color: '#fff',
-                fontSize: 14,
+                fontSize: 12,
             }
         },
         tooltip : {
@@ -471,6 +530,9 @@ function loadOptionMap(mapJSON){
     var option = {
         tooltip: {
             trigger: 'item',
+            position:'top',
+            padding:[8,16],
+            backgroundColor:'#00cccd',
             formatter: function (params) {
                 return  '片区：' + params.data.groupName + '<br/> 设备：' + params.name;
             }
@@ -492,26 +554,9 @@ function loadOptionMap(mapJSON){
             silent:true,
             layoutCenter: ['30%', '30%'],
             itemStyle: {
-                // normal: {
-                //     borderWidth: 1,
-                //     // areaColor: new echarts.graphic.LinearGradient(
-                //     //     0, 0, 0, 1,
-                //     //     [
-                //     //         {offset: 0, color: '#0a4f88'},
-                //     //         {offset: 0.2, color: '#123290'},
-                //     //         {offset: 0.4, color: '#0a3b8c'},
-                //     //         {offset: 0.6, color: '#1164e9'},
-                //     //         {offset: 0.8, color: '#1164e9'},
-                //     //         {offset: 1, color: '#1164e9'}
-                //     //     ]
-                //     // ),
-                //     areaColor: '#00467F',
-                //     opacity:0.8,
-                //     borderColor: '#2bfaff'
-                // },
                 normal: {
-                    areaColor: 'none',
-                    borderWidth: 0,
+                    areaColor: 'rgba(20,247,250,0.1)',
+                    borderWidth: 0.1,
                     borderColor:'#0cb7cc',
                     shadowColor: 'rgba(0,255,252, 1)',
                     shadowBlur: 10
@@ -524,11 +569,9 @@ function loadOptionMap(mapJSON){
         },
         series: getSeries(mapJSON)
     };
-    // console.log(getSeries(mapJSON));
     myChartMap.setOption(option);
 };
 function getSeries(mapJSON){
-    console.log(mapJSON.length)
     var mapArr = [];
     var mapName = 'china';
     var seriesPointData = [];
@@ -537,58 +580,56 @@ function getSeries(mapJSON){
         map: 'china',
         geoIndex: 0,
         showLegendSymbol: false, // 存在legend时显示
-        label: {
-            normal: {
-                show: false,
-            },
-            emphasis: {
-                show: false,
-                textStyle: {
-                    color: '#fff'
-                }
-            }
-        },
-        roam: false,
-        itemStyle: {
-            normal: {
-                areaColor: '#006fff',
-                borderColor: '#0145a4',
-                borderWidth: 0
-            },
-            emphasis: {
-                areaColor: '#006fff'
-            }
-        },
+        roam: false
     }];
-    mapJSON.forEach(function(item,index) {
-        var seriesPoint = {
-            name:item.name,
-            groupName:item.groupName,
-            value:[parseFloat(item.latitude),parseFloat(item.longitude),parseFloat(item.value)]
-        };
-        if(seriesPointData[index % 10] == undefined){
-            seriesPointData[index % 10] = [];
+    
+    var len = 10;
+    seriesPointData[len] = [];
+    mapJSON.point.forEach(function(item,index) {
+        var itemArr = item.split(",");
+        if (parseInt(itemArr[2]) == 10) {
+            return true;
         }
-        seriesPointData[index % 10].push(seriesPoint);
+        var seriesPoint = {
+            name:itemArr[3],
+            groupName:mapJSON.group[itemArr[4]],
+            value:[parseFloat(itemArr[0]),parseFloat(itemArr[1]),parseFloat(itemArr[2])]
+        };
+        if (index < 20) {
+            seriesPointData[len].push(seriesPoint);
+            return true;
+        }
+        if(seriesPointData[index % len] == undefined){
+            seriesPointData[index % len] = [];
+        }
+        seriesPointData[index % len].push(seriesPoint);
     });
-    var colorList = ['#fff','#fff','yellow','blue','green', '#fff','#fff','red','yellow','#fff','yellow','#fff','#BA4A00','#ECF0F1','#616A6B','#EAF2F8','#4A235A','#3498DB' ];
+    var colorList = ['#fff','#fff','#00fffc','#00fffc','#00fffc', '#00fffc','#6cefb0','#fff','yellow','#fff','yellow'];
 
     seriesPointData.forEach(function(item,index){
-        var typeList = 'scatter';
-        if(index==1){
-            //typeList = 'effectScatter'; 
-        }
+        var typeList = index == len ? 'effectScatter' : 'scatter';
+        var size = index == len ? 10 : 5;
         seriesData.push({
             name: '小点',
             type: typeList,
+            large:true,
+            largeThreshold: 5000,
             coordinateSystem: 'geo',
             data: item,
-            symbolSize:index/2,
+            // symbolSize:3,
             // symbol: 'image://./images/cdz_icon2.png', //气泡
             // symbolSize: [12, 20],
-            // symbolSize: function(val) {
-            //     return val[2] / 8;
-            // },
+            symbolSize: function(val) {
+                // console.log(val)
+                // return val[2] / 5;
+                if(val[2] == 10){
+                    return 1;
+                }else if(val[2] >= 50){
+                    return size;
+                }else{
+                    return 2;
+                }
+            },
             rippleEffect: {
                 brushType: 'stroke'
             },
@@ -596,7 +637,7 @@ function getSeries(mapJSON){
             itemStyle: {
                 normal: {
                     color: colorList[index],
-                    shadowBlur: 1,
+                    shadowBlur: 2,
                     shadowColor: '#2bfaff'
                 }
             }
