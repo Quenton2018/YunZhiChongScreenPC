@@ -27,7 +27,7 @@
 			AjaxJSON.get(API_URL.chringPlace,{},function(res){
 		    	loadOption2(res.data);
 //		    	console.log(res.data['上网查询'])
-		    });
+		   });
 		    // var find = setInterval(function(){
 		    // 	AjaxJSON.get(API_URL.chringPlace,{},function(res){
 			   //  	loadOption2(res.data);
