@@ -13,10 +13,53 @@ $(function () {
             time: 800
         });
     });
-    loadCharts1();
+    AjaxJSON.get(API_URL.getCharingByELECar,params,function(res){
+        if(!res.data) return false;
+        loadCharts1(res.data);
+    });
+    AjaxJSON.get(API_URL.groupByPower,params,function(res){
+        var htmlStr = '';
+        if(!res.data) return false;
+        res.data.forEach(function(item,index){
+            var totalPower = parseFloat(item.totalPower).toFixed(2);
+            var address = item.address;
+            var index = index + 1;
+            if(item.name){
+                var phone = plusXing(item.name); 
+            }else{
+                var phone = '';
+            }        
+            htmlStr += '<div class="list-item">'+
+                '<span class="mz"><i class="jt_icon up"></i>'+index+'</span>'+
+                '<span class="area-power"><em class="counter iconfont">'+totalPower+'</em><sub>度</sub></span>'+
+                '<span class="area-name">'+address+'</span>'+
+                '<span class="area-dls">'+phone+'</span>'+
+           '</div>';
+        });
+        $("#rankList").html(htmlStr);       
+    });
+    
+    
 });
 
-function loadCharts1 () {
+//手机号码脱敏
+function plusXing(phone) {
+    return phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
+}
+function loadCharts1 (resData) {
+
+    var xAxisData = resData.map(function(item){
+        return item.name;
+    });
+    
+    var seriesData1 = resData.map(function(item){
+        return parseInt(item.carValue);
+    });
+
+    var seriesData2 = resData.map(function(item){
+        return parseInt(item.charingValue);
+    });
+
     var option = {
         color: ['#19c1cc', '#97e087'],
         legend: {
@@ -67,12 +110,13 @@ function loadCharts1 () {
                         color: '#fff'
                     }
                 },
-                data: ['南昌', '九江', '宜春', '赣州', '抚州', '上饶', '吉安']
+                data: xAxisData
             }
         ],
         yAxis: [
             {
                 type: 'value',
+                name:'单位/万',
                 splitLine:{
                     show: true,
                     lineStyle:{
@@ -108,7 +152,7 @@ function loadCharts1 () {
                         }
                     }
                 },
-                data: [72, 56, 66, 84, 108, 70, 82]
+                data: seriesData1
             },
             {
                 name: '充电桩',
@@ -126,7 +170,7 @@ function loadCharts1 () {
                         }
                     }
                 },
-                data: [62, 38, 45, 100, 60, 84, 80]
+                data: seriesData2
             }
         ]
     };

@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="css/common.css">
     <link rel="stylesheet" type="text/css" href="css/page3.css">
     <script type="text/javascript" src="js/jquery-1.8.1.min.js"></script>
+    <script type="text/javascript" src="js/base.js"></script>
     <script type="text/javascript" src="js/jquery.countup.min.js"></script> 
     <script type="text/javascript" src="js/3dSlider.js"></script>  
     <script type="text/javascript" src="js/echarts4.min.js"></script>
@@ -57,49 +58,8 @@
                                 <th width="48%">充电桩数量（台）</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>王先生</td>
-                                <td>江西</td>
-                                <td>1140元</td>
-                                <td class="progress"><span class="progress-bar"><i style="width:100%;"></i><em>437</em></span></td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>李小姐</td>
-                                <td>江西</td>
-                                <td>1140元</td>
-                                <td class="progress"><span class="progress-bar"><i style="width:60%;"></i><em>387</em></span></td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>王小姐</td>
-                                <td>江西</td>
-                                <td>1140元</td>
-                                <td class="progress"><span class="progress-bar"><i style="width:50%;"></i><em>300</em></span></td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>董小姐</td>
-                                <td>江西</td>
-                                <td>1140元</td>
-                                <td class="progress"><span class="progress-bar"><i style="width:40%;"></i><em>280</em></span></td>
-                            </tr>
-                            <tr>
-                                <td>5</td>
-                                <td>王小姐</td>
-                                <td>江西</td>
-                                <td>1140元</td>
-                                <td class="progress"><span class="progress-bar"><i style="width:34%;"></i><em>260</em></span></td>
-                            </tr>
-                            <tr>
-                                <td>6</td>
-                                <td>王先生</td>
-                                <td>江西</td>
-                                <td>1140元</td>
-                                <td class="progress"><span class="progress-bar"><i style="width:30%;"></i><em>220</em></span></td>
-                            </tr>
+                        <tbody id="dlsList">
+                            
                         </tbody>
                     </table>
                 </div>
@@ -109,17 +69,17 @@
                 <div class="cdzpjsj-box bgsize">
                     <div class="cirle-box flex">
                         <div class="cirle1 bgsize">
-                            <p class="blue"><span class="counter">5664</span>W</p>
+                            <p class="blue"><span class="counter" id="chargeElectric">-</span>W</p>
                             <p>日充电量</p>
                         </div>
                         <div class="cirle2 bgsize">
-                            <p class="red"><span class="counter">6988</span>H</p>
+                            <p class="red"><span class="counter" id="chargingDateTime">-</span>H</p>
                             <p>日充电时长</p>                             
                         </div>
                     </div>
                     <div class="cirle-box flex" style="padding:0;">
                         <div class="cirle3 bgsize">
-                            <p class="yellow"><span class="counter">860</span>人</p>
+                            <p class="yellow"><span class="counter" id="signIn">-</span>人</p>
                             <p>日签到人数</p>                             
                         </div>
                     </div>                   
@@ -129,16 +89,16 @@
                     <div id="3dSilder" class="roundabout_box">
                         <ul class="roundabout-holder">
                             <li>
-                                <img src="images/pic1_03.png">
+                                <img src="images/slider/slider1.png">
                             </li>
                             <li>
-                                <img src="images/pic1_03.png">
+                                <img src="images/slider/slider2.png">
                             </li>
                             <li>
-                                <img src="images/pic1_03.png">
+                                <img src="images/slider/slider3.png">
                             </li>
                             <li>
-                                <img src="images/pic1_03.png">
+                                <img src="images/slider/slider4.png">
                             </li>
                         </ul>
                     </div>

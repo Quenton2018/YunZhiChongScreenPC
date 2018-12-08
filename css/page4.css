@@ -16,11 +16,14 @@
 .list-item{width:100%;padding:5px 0;margin-bottom:0.1rem;background:rgba(0,255,255,0.36);overflow:hidden;font-size:0.26rem;border-radius: 0.2rem;}
 .list-item:nth-child(even){background:rgba(106,180,246,0.3);}
 .list-item span{width:25%;float:left;height:100%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
-.list-item span.mz{font-size:0.26rem;}
+.list-item span.mz{width: 10%;font-size:0.26rem;}
+.list-item span.area-power{width: 30%;}
 .list-item span em{font-style:normal;}
 .list-item span sub{font-style:normal;font-size:0.16rem;vertical-align:bottom;}
-.list-item span.area-name{font-size:0.2rem;}
-.list-item span.area-dls{font-size:0.2rem;display:contents;}
+.list-item span.area-name{font-size:0.2rem;width: 30%;text-align:left;position: relative;
+    top: 0.04rem;}
+.list-item span.area-dls{font-size:0.2rem;width: 30%;position: relative;
+    top: 0.04rem;}
 @media only screen and (max-width:1920px){
     .wrap{padding-top:10%;}
 }

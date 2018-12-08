@@ -5,6 +5,7 @@ var myChart4 = echarts.init(document.getElementById('Echarts4'));
 var myChart5 = echarts.init(document.getElementById('Echarts5'));
 var myChart6 = echarts.init(document.getElementById('Echarts6'));
 var myChartMap = echarts.init(document.getElementById('Echartsmap'));
+
 $(function () {
     var params = {};
     AjaxJSON.get(API_URL.getChargingAmount,params,function(res){
@@ -25,15 +26,19 @@ $(function () {
     AjaxJSON.get(API_URL.findLastLogs,params,function(res){
         var html = '';
         $.each(res.data,function(k,v){
-            html +='<li class="list-item"><span>'+v.mobile+'</span><span>'+v.desc+'</span></li>';
+            var phone = plusXing(v.mobile);
+            html +='<li class="list-item"><span>'+phone+'</span><span>'+v.desc+'</span></li>';
         });
         $('.logList').html(html);
-        startMarquee();      
+        // startMarquee(); 
+        srcoll();    
     });
     
     var scrollNumber = setInterval(function () {
-        ajaxStatistics();
+        // ajaxStatistics();
+        // var userNumber = $("#userNumber").text() + Math.round(Math.random()*2)
     }, 15000);
+
     ajaxStatistics();
     function ajaxStatistics(){
         AjaxJSON.get(API_URL.getDailyStatistics,params,function(res){
@@ -46,9 +51,10 @@ $(function () {
             }      
         });
     }
+    ajaxUseRank();
     var scrollRank = setInterval(function () {
         ajaxUseRank();
-    }, 1000);
+    }, 900000);
     
     //获取代理商地区分布
     AjaxJSON.get(API_URL.address,params,function(res){
@@ -87,7 +93,10 @@ $(function () {
 
     
 });
-
+//手机号码脱敏
+function plusXing(phone) {
+    return phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
+}
 //数字千分位
 function toThousands(num) {
     var result = [ ], counter = 0;
@@ -121,6 +130,27 @@ function ScrollText(){
     },1000,function(){  
         $(this).css({marginTop : "0px"}).find("li:first").appendTo(this);  
     })  
+}
+function srcoll(){
+    var _scroll = document.getElementById("marquee"),
+        _inner1 = document.getElementById("inner1"),
+        _inner2 = document.getElementById("inner2"),
+        speed = 300;
+    _inner2.innerHTML = _inner1.innerHTML;
+    function marquee(){
+        if(_inner1.offsetHeight<=_scroll.scrollTop){
+            _scroll.scrollTop = 0
+        }else{
+            _scroll.scrollTop += 10;
+        }
+    }
+    var interval = setInterval(marquee,speed);
+    _scroll.onmouseover = function(){
+        clearInterval(interval);
+    }
+    _scroll.onmouseout = function(){
+        interval = setInterval(marquee,speed);
+    }
 }
 //滚动充电桩数字
 function ScrollNums(cdzNums){
@@ -211,8 +241,8 @@ function loadOption2(resData){
         return parseInt(item.value);
     });
     var yAxisData = data.map(function(item){
-        if (item.name && item.name.length > 8) {
-          return item.name.substring(0, 8) + "...";
+        if (item.name && item.name.length > 9) {
+          return item.name.substring(0, 9) + "...";
         } else {
           return item.name;
         }
@@ -236,17 +266,9 @@ function loadOption2(resData){
                 color:'#fff'
             }       
         },{
-            text: '台数',
-            top:'12%',
-            right:'18%',
-            textStyle:{
-                fontSize:12,
-                color:'#fcff00'
-            }       
-        },{
             text: '使用率',
-            top:'12%',
-            right:'3%',
+            top:'13%',
+            right:'2%',
             textStyle:{
                 fontSize:12,
                 color:'#fcff00'
@@ -257,10 +279,10 @@ function loadOption2(resData){
         },
         grid: {
             show : false,
-            left: 15,
-            right:95,
+            left: 0,
+            right:'18%',
             bottom: 30,
-            top: '20%',
+            top: '25%',
             containLabel: true
         },
         xAxis: {
@@ -295,7 +317,7 @@ function loadOption2(resData){
                     normal: {
                         formatter: function(data) {
                             var result = "";
-                                result += xAxisData[data.dataIndex] + "       " + ratioData[data.dataIndex]+'%';
+                                result += ratioData[data.dataIndex]+'%';
                             return result;
                         },
                         show: true,

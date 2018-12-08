@@ -9,18 +9,17 @@
 		$(function () {
 		    loadOption1();
 		    loadOption3();    
-		    loadOption5();
 		    
-		    AjaxJSON.get(API_URL.chringUseRank,{},function(res){
+		    AjaxJSON.get(API_URL.getAllNum,{},function(res){
 		    	loadOption4(res.data);
 		    });
 		    var load = setInterval(function(){
-		    	AjaxJSON.get(API_URL.chringUseRank,{},function(res){
+		    	AjaxJSON.get(API_URL.getAllNum,{},function(res){
 			    	loadOption4(res.data);
 			    })
-		    },30000);
+		    },3000);
 		    
-		    AjaxJSON.get(API_URL.chringAmount,{},function(res){
+		    AjaxJSON.get(API_URL.ChargingCdz,{},function(res){
 //			    console.log(res.data)
 			    $("#Num").text(res.data+'台')
 			});
@@ -34,6 +33,11 @@
 			    	loadOption2(res.data);
 			    });
 		    },3000);
+		    
+		    AjaxJSON.get(API_URL.ChargingProblem,{},function(res){
+		    	loadOption5(res.data);
+		    	console.log(res.data)
+		    });
 			
 		});
 		
@@ -325,9 +329,9 @@
 	
 	function  loadOption4(resData){
 		myChart4.clear();
-		var city = ['江西省', '江苏省', '安徽省', '河北省', '湖南省', '浙江省'];
+		var city = ['江西省', '江苏省', '安徽省', '河北省', '湖南省', '浙江省','四川省'];
 //		var num = [3310, 5100, 4029, 5000, 6050, 7030];
-		var num = [resData.village, resData.depot, resData.school, resData.superMaket, resData.bikeShed,resData.bikeShed];
+		var num = resData;
 		option = {
 			tooltip : {
 		        trigger: 'axis',
@@ -409,19 +413,21 @@
         myChart4.setOption(option);
 	}	
 	
-	function  loadOption5(){
+	function  loadOption5(resData){
 		myChart5.clear();
-		var cdzList = ['充电桩收益','充电桩收费','充电桩商业化','充电桩安装','充电桩加盟','充电桩政策','充电桩APP'];
+		var cdzList = [];
 		var bgcolor = ['#ff4e4e','#ffff43', '#25f3e6', '#0035f9', '#efe39b','#97dd42','#f19f4e'];
-		var cdzNum = [
-		                {value:335, name:'充电桩收益'},
-		                {value:310, name:'充电桩收费'},
-		                {value:234, name:'充电桩商业化'},
-		                {value:135, name:'充电桩安装'},
-		                {value:1548, name:'充电桩加盟'},
-		                {value:1548, name:'充电桩政策'},
-		                {value:1548, name:'充电桩APP'}
-		            ];
+		
+        var cdzNum = [];
+	    for (var i in resData) {
+	        if(resData.hasOwnProperty(i)){		
+	        	cdzNum.push({
+	        		value:resData[i],
+	        		name:i
+	        	});
+	        	cdzList.push(i);
+	        }; 
+	    }
 		option = {
 		    tooltip: {
 		        trigger: 'item',
