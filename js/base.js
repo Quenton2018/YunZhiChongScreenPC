@@ -39,6 +39,12 @@ API_URL.parnerMoney = apiHost + "/api/user/orderByMoney/parnerMoney";   //代理
 
 API_URL.getChargeDate = apiHost + "/api/count/getChargeDate"; //充电桩日平均数据
 
+API_URL.getAllNum = apiHost + "/api/count/getAllNum";//各区域充电桩数量统计
+
+API_URL.ChargingProblem = apiHost + "/api/user/userChargingProblem";//用户常问充电桩问题统计
+
+API_URL.ChargingCdz = apiHost + "/api/count/getChargingCdz";//充电桩数量总数
+
 
 
 /**
