@@ -33,11 +33,31 @@ $(function () {
         // startMarquee(); 
         srcoll();    
     });
-    
+    //每小时刷新数据
     var scrollNumber = setInterval(function () {
-        // ajaxStatistics();
-        // var userNumber = $("#userNumber").text() + Math.round(Math.random()*2)
-    }, 15000);
+        ajaxStatistics();
+        // 
+    }, 3600000);
+
+    var scrollUser = setInterval(function () {
+        //充电人数自增
+        var userNumber = parseInt($("#userNumber").text()) + Math.round(Math.random()*5);
+        $("#userNumber").text(userNumber);
+        //日充电次数
+        var chargeTimes = parseInt($("#chargeTimes").text()) + Math.round(Math.random()*100);
+        $("#chargeTimes").text(chargeTimes);
+        //日消费金额
+        var chargeAmount = parseFloat(parseFloat($("#chargeAmount").text()) + Math.random()*100).toFixed(2);
+        $("#chargeAmount").text(chargeAmount);
+        //日消费电量
+        var chargeElectric = parseFloat(parseFloat($("#chargeElectric").text()) + Math.random()*100).toFixed(2);
+        $("#chargeElectric").text(chargeElectric);
+        //日在线充电桩
+        var dayOnLineCharing = parseInt($("#dayOnLineCharing").text()) + Math.round(Math.random()*5);
+        $("#dayOnLineCharing").text(dayOnLineCharing);
+
+    },10100);
+
 
     ajaxStatistics();
     function ajaxStatistics(){
@@ -52,6 +72,7 @@ $(function () {
         });
     }
     ajaxUseRank();
+
     var scrollRank = setInterval(function () {
         ajaxUseRank();
     }, 900000);
@@ -368,7 +389,7 @@ function loadOption2(resData){
 };
 //加载柱状图2数据
 function loadOption3(resData){
-    var dataAxis = ['小区', '车棚', '停车场', '学校', '商城'];
+    var dataAxis = ['小区', '工厂', '停车场', '学校', '商城'];
     var data = [resData.village, resData.bikeShed, resData.depot, resData.school, resData.superMaket];
     var option = {
         grid: {
